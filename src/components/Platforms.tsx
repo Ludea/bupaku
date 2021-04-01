@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Box from '@material-ui/core/Box';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -30,7 +31,7 @@ function Platforms(props: any) {
     };
 
     return (
-        <div>
+        <Box sx={{ display: 'flex' }}>
         <FormGroup>
             <FormControlLabel control={<Checkbox name="HostOnly" onChange={handleChange} checked={checked.HostOnly} />} label="Host Only" />
             <FormControlLabel control={<Checkbox name="Win64" onChange={handleChange} disabled={checked.HostOnly} checked={checked.Win64}/>} label="Win64" />
@@ -50,7 +51,7 @@ function Platforms(props: any) {
             <FormControlLabel control={<Checkbox name="Lumin" onChange={handleChange} checked={checked.HostOnly} />} label="Lumin" />
             <FormControlLabel control={<Checkbox name="Hololens" onChange={handleChange} checked={checked.HostOnly} />} label="Hololens" />
         </FormGroup>
-        </div>
+        </Box>
     );
 }
 
