@@ -1,24 +1,36 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+
+//components
+import Platforms from 'components/Platforms';
+//import { Command } from "@tauri-apps/api/shell"
 
 function App() {
+  var PlatformType: any; 
+  const Platform = (data: any) => {  
+    PlatformType = data;
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Platforms Platform={Platform} />
+    <TextField
+      id="outlined-multiline-static"
+      multiline
+      rows="10"
+      defaultValue="Welcome"
+      fullWidth
+      margin="normal"
+      variant="outlined"
+      inputProps={{
+      readOnly: true
+      }}
+    />
+    <Button 
+      variant="contained" 
+      color="primary"        
+    >
+    Start
+    </Button>
     </div>
   );
 }
