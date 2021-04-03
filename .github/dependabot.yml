@@ -4,7 +4,7 @@ updates:
     directory: "src-tauri"
     schedule:
       interval: "daily"
-  - package-ecosystem: "javascript" 
+  - package-ecosystem: "npm" 
     directory: "/"
     schedule:
       interval: "daily"
