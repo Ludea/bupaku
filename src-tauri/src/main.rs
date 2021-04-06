@@ -3,8 +3,13 @@
   windows_subsystem = "windows"
 )]
 
+mod cmd;
+
 fn main() {
-  tauri::AppBuilder::default()
-    .build(tauri::generate_context!())
-    .run();
+  tauri::Builder::default()
+    .invoke_handler(tauri::generate_handler![
+      cmd::detect_os,
+    ])
+    .run(tauri::generate_context!())
+    .expect("error while running tauri application");
 }
