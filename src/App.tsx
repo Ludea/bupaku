@@ -10,7 +10,54 @@ import Button from '@material-ui/core/Button';
 
 //components
 import Platforms from 'components/Platforms';
+
+//API
 import { Command } from "@tauri-apps/api/dist/shell"
+import { invoke } from "@tauri-apps/api/dist/tauri";
+
+let cmd: any;
+let args: any;
+let extensions: any;
+let child;
+
+function spawn(script: any) {
+  invoke("detect_os")
+  .then(data => {
+    switch (data) {
+      case 'windows': 
+        cmd = "powershell";
+        args = ['/C'];
+        extensions = '.bat'
+        break;
+      case 'macos': 
+        cmd = "sh"
+        args = ['-c'];
+        extensions = '.command'
+        break;
+      case 'linux': 
+        cmd = "sh"
+        args = ['-c'];
+        extensions = '.sh'
+        break;
+    }
+  })
+  .catch(data => console.log(data));
+  child = null
+  const command = new Command(cmd, [...args, script + extensions])
+  command.on('close', data => {
+    console.log("command finished with code : " + data.code + "and signal : " + data.signal)
+    child = null
+  })
+  command.on('error', error => console.log(error) )
+  command.stdout.on('data', line => console.log(line))
+  command.stderr.on('data', line => console.log(line))
+  
+  command.spawn()
+    .then(c => {
+      child = c
+    })
+   // .catch(onMessage)
+}
 
 function App() {
   const [UE4Path, setUE4Path] = useState<any>();
@@ -44,6 +91,13 @@ function App() {
           <MenuItem value={4.26}>4.26</MenuItem>
         </Select>
       </FormControl>
+      <Button 
+        variant="contained" 
+        color="primary"
+        onClick={e => spawn(UE4Path + 'Setup')}
+      >
+      Setup Dependencies
+      </Button>
       <Platforms Platform={Platform} />
       </Grid>
       </Grid>
@@ -62,7 +116,8 @@ function App() {
       />
       <Button 
         variant="contained" 
-        color="primary"        
+        color="primary" 
+        onClick={spawn}       
       >
       Start
       </Button>
