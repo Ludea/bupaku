@@ -14,6 +14,7 @@ import Platforms from 'components/Platforms';
 //API
 import { Command } from "@tauri-apps/api/dist/shell"
 import { invoke } from "@tauri-apps/api/dist/tauri";
+import { open } from "@tauri-apps/api/dist/dialog";
 
 let cmd: any;
 let args: any;
@@ -59,9 +60,19 @@ function spawn(script: any) {
    // .catch(onMessage)
 }
 
+
 function App() {
   const [UE4Path, setUE4Path] = useState<any>();
   const [UE4Version, setUE4Version] = useState<any>();
+
+  function openDialog() {
+    open({
+      directory: true
+    })
+      .then(function (res) {
+        setUE4Path(res);
+      });
+    }
 
   var PlatformType: any; 
   const Platform = (data: any) => {  
@@ -78,6 +89,7 @@ function App() {
         value={UE4Path}
         margin="normal"
         inputProps={{ 'aria-label': 'bare' }}
+        onClick={openDialog}
       />
       <FormControl>
         <InputLabel id="demo-simple-select-label">UE4 Version</InputLabel>
