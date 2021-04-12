@@ -7,7 +7,7 @@ license = ""
 repository = ""
 default-run = "bupaku"
 edition = "2018"
-build = "src/build.rs"
+build = "build.rs"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -17,7 +17,7 @@ tauri-build = { path = "../../tauri/core/tauri-build" }
 [dependencies]
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
-tauri = { path = "../../tauri/tauri", features =["api-all"]}
+tauri = { path = "../../tauri/core/tauri", features =["api-all", "cli"]}
 
 [features]
 default = [ "custom-protocol" ]
