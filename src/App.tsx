@@ -84,8 +84,9 @@ function App() {
           path: res
         })
         .then((data: any) => {
-          if (data / Math.pow(1024, 3) < 100 )
-            stdoutput.current.value = "Not enough space, you need at least 100G available";
+          let available_space = Math.round(data / Math.pow(1024, 3) * 100) /100  ;
+          if (available_space < 100 )
+            stdoutput.current.value = `Not enough space, you need at least 100G available and you have only ${available_space}G`  ;
           else 
           setUE4Path(res);
         })
