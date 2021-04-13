@@ -79,7 +79,16 @@ function App() {
       directory: true
     })
       .then(function (res) {
-        setUE4Path(res);
+        //TODO: - check if a git repository
+        invoke("get_available_space", {
+          path: res
+        })
+        .then((data: any) => {
+          if (data / Math.pow(1024, 3) < 100 )
+            stdoutput.current.value = "Not enough space, you need at least 100G available";
+          else 
+          setUE4Path(res);
+        })
       });
     }
 
