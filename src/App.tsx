@@ -28,6 +28,11 @@ const App = () => {
   const [isBuilding, setIsBuilding] = useState<any>();
   const stdoutput = useRef<any>();
 
+  var PlatformType: any; 
+  const Platform = (data: any) => {  
+    PlatformType = data;
+  };
+
   useEffect(() => {
     getValues("UE4Path").then(value => {
       if ( value != null)  {
@@ -56,6 +61,7 @@ const App = () => {
           extensions = '.sh'
           break;
       }
+
       //child = null
       const command = new Command(cmd, [...args, script + extensions])
       command.on('close', data => {
@@ -117,10 +123,6 @@ const App = () => {
       });
     }
 
-  var PlatformType: any; 
-  const Platform = (data: any) => {  
-    PlatformType = data;
-  };
   return (
     <div>
     <Box sx={{ flexGrow: 1 }}>
