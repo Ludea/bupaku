@@ -29,11 +29,11 @@ const App = () => {
   const stdoutput = useRef<any>();
 
   useEffect(() => {
-    var EnginePath = getValues("UE4Path");
-    if ( EnginePath != null)  {
-      console.log("allo : " + EnginePath);
-      setUE4Path(EnginePath);
-    }
+    getValues("UE4Path").then(value => {
+      if ( value != null)  {
+        setUE4Path(value);
+      }
+    });
   }, []);
 
   const spawn = (script: any) => {
