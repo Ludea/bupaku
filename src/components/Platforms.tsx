@@ -47,9 +47,9 @@ const Platforms = (props: any) => {
             <FormControlLabel control={<Checkbox name="PS4" onChange={handleChange} disabled={checked.HostOnly} checked={checked.PS4} />} label="PS4" />
         </FormGroup>
         <FormGroup>
-            <FormControlLabel control={<Checkbox name="Xbox" onChange={handleChange} checked={checked.HostOnly} />} label="Xbox" />
-            <FormControlLabel control={<Checkbox name="Lumin" onChange={handleChange} checked={checked.HostOnly} />} label="Lumin" />
-            <FormControlLabel control={<Checkbox name="Hololens" onChange={handleChange} checked={checked.HostOnly} />} label="Hololens" />
+            <FormControlLabel control={<Checkbox name="Xbox" onChange={handleChange} disabled={checked.HostOnly} checked={checked.Xbox} />} label="Xbox" />
+            <FormControlLabel control={<Checkbox name="Lumin" onChange={handleChange} disabled={checked.HostOnly} checked={checked.Lumin} />} label="Lumin" />
+            <FormControlLabel control={<Checkbox name="Hololens" onChange={handleChange} disabled={checked.HostOnly} checked={checked.Hololens} />} label="Hololens" />
         </FormGroup>
         </Box>
     );
