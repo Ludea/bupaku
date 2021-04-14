@@ -116,9 +116,7 @@ const App = () => {
           else {
             setValues("UE4Path", res);
             setUE4Path(res);
-          }
-          setUE4Path(res);
-          setValues("UE4Path", res);     
+          }    
         })
       });
     }
