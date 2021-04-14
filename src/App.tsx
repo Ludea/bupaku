@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -10,6 +10,7 @@ import Button from '@material-ui/core/Button';
 
 //components
 import Platforms from 'components/Platforms';
+import { getValues, setValues } from 'utils/Forage'
 
 //API
 import { Command } from "@tauri-apps/api/dist/shell"
@@ -19,12 +20,21 @@ import { open } from "@tauri-apps/api/dist/dialog";
 let cmd: any;
 let args: any;
 let extensions: any;
-let child;
+let child: any;
 
 function App() {
   const [UE4Path, setUE4Path] = useState<any>();
   const [UE4Version, setUE4Version] = useState<any>();
+  const [isBuilding, setIsBuilding] = useState<any>();
   const stdoutput = useRef<any>();
+
+  useEffect(() => {
+    var EnginePath = getValues("UE4Path");
+    if ( EnginePath != null)  {
+      console.log("allo : " + EnginePath);
+      setUE4Path(EnginePath);
+    }
+  }, []);
 
   function spawn(script: any) {
     invoke("detect_os")
@@ -46,32 +56,42 @@ function App() {
           extensions = '.sh'
           break;
       }
-      child = null
-      const command = new Command(cmd, [...args, script])
+      //child = null
+      const command = new Command(cmd, [...args, script + extensions])
       command.on('close', data => {
         child = null
       })
       command.on('error', error => {
-        stdoutput.current.value = error
-        console.log(JSON.stringify(error))
+        stdoutput.current.value = "13 : " + JSON.stringify(error)
+        console.log("13 : " + JSON.stringify(error))
       })
       command.stdout.on('data', line => {
-        stdoutput.current.value = line
+        stdoutput.current.value += line[0]
         console.log(line)
       })
       
-      command.stderr.on('data', line => stdoutput.current.value = JSON.stringify(line))
+      command.stderr.on('data', line => stdoutput.current.value = "14 : " + line); // "14 : " + JSON.stringify(line))
     
       command.spawn()
         .then(data => {
+          setIsBuilding(true);
           child = data
-          stdoutput.current.value = JSON.stringify(data)
         })
         .catch(error => {
           console.log("error : " + JSON.stringify(error))
+          stdoutput.current.value = JSON.stringify(error)
         })
       })
       .catch(data => stdoutput.current.value = data );
+  }
+
+  function kill() {
+    child.kill()
+         .then(() => {
+           stdoutput.current.value += "Stopping process"
+           setIsBuilding(false);
+         })
+         .error(stdoutput.current.value += "An error appear when killing process")
   }
 
   function openDialog() {
@@ -87,8 +107,12 @@ function App() {
           let available_space = Math.round(data / Math.pow(1024, 3) * 100) /100  ;
           if (available_space < 100 )
             stdoutput.current.value = `Not enough space, you need at least 100G available and you have only ${available_space}G`  ;
-          else 
+          else {
+            setValues("UE4Path", res);
+            setUE4Path(res);
+          }
           setUE4Path(res);
+          setValues("UE4Path", res);     
         })
       });
     }
@@ -146,13 +170,27 @@ function App() {
         readOnly: true
         }}
       />
-      <Button 
-        variant="contained" 
-        color="primary" 
-        onClick={spawn}       
-      >
-      Start
-      </Button>
+      {
+        !isBuilding ?
+        (
+          <Button 
+            variant="contained" 
+            color="primary" 
+            onClick={spawn}       
+          >
+          Start
+          </Button>
+        ) :
+        (
+          <Button 
+            variant="contained" 
+            color="primary" 
+            onClick={kill}       
+          >
+          Stop
+          </Button>
+        )
+      }
       </div>
   );
 }
