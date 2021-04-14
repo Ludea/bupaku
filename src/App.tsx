@@ -22,7 +22,7 @@ let args: any;
 let extensions: any;
 let child: any;
 
-function App() {
+const App = () => {
   const [UE4Path, setUE4Path] = useState<any>();
   const [UE4Version, setUE4Version] = useState<any>();
   const [isBuilding, setIsBuilding] = useState<any>();
@@ -36,7 +36,7 @@ function App() {
     }
   }, []);
 
-  function spawn(script: any) {
+  const spawn = (script: any) => {
     invoke("detect_os")
     .then(data => {
       switch (data) {
@@ -85,7 +85,7 @@ function App() {
       .catch(data => stdoutput.current.value = data );
   }
 
-  function kill() {
+  const kill = () => {
     child.kill()
          .then(() => {
            stdoutput.current.value += "Stopping process"
@@ -94,11 +94,11 @@ function App() {
          .error(stdoutput.current.value += "An error appear when killing process")
   }
 
-  function openDialog() {
+  const openDialog = () => {
     open({
       directory: true
     })
-      .then(function (res) {
+      .then(res => {
         //TODO: - check if a git repository
         invoke("get_available_space", {
           path: res

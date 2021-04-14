@@ -4,7 +4,7 @@ import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 
-function Platforms(props: any) {
+const Platforms = (props: any) => {
     const [checked, setChecked] = useState<any>({
         HostOnly: false,
         Win64: false,
