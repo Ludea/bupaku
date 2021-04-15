@@ -25,9 +25,9 @@ const Platforms = (props: any) => {
     });
 
     useEffect(() => {
-        getValues("Platforms").then(value => {
-          if ( value != null)  {
-            setChecked(value);
+        getValues("Platforms").then(state => {
+          if ( state != null)  {
+            setChecked(state);
           }
         });
       }, []);
