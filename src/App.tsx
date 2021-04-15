@@ -10,17 +10,12 @@ import Button from '@material-ui/core/Button';
 
 //components
 import Platforms from 'components/Platforms';
-import { getValues, setValues } from 'utils/Forage'
+import { getValues, setValues } from 'utils/Forage';
+import { BuildGraph, SetupDependencies, KillProcess } from 'utils/UE4Commands';
 
 //API
-import { Command } from "@tauri-apps/api/dist/shell"
-import { invoke } from "@tauri-apps/api/dist/tauri";
 import { open } from "@tauri-apps/api/dist/dialog";
-
-let cmd: any;
-let args: any;
-let extensions: any;
-let child: any;
+import { invoke } from "@tauri-apps/api/dist/tauri";
 
 const App = () => {
   const [UE4Path, setUE4Path] = useState<any>();
@@ -41,63 +36,27 @@ const App = () => {
     });
   }, []);
 
-  const spawn = (script: any) => {
-    invoke("detect_os")
-    .then(data => {
-      switch (data) {
-        case 'windows': 
-          cmd = "powershell";
-          args = ['/C'];
-          extensions = '.bat'
-          break;
-        case 'macos': 
-          cmd = "sh"
-          args = ['-c'];
-          extensions = '.command'
-          break;
-        case 'linux': 
-          cmd = "sh"
-          args = ['-c'];
-          extensions = '.sh'
-          break;
-      }
-
-      //child = null
-      const command = new Command(cmd, [...args, script + extensions])
-      command.on('close', data => {
-        child = null
-      })
-      command.on('error', error => {
-        stdoutput.current.value = "13 : " + JSON.stringify(error)
-        console.log("13 : " + JSON.stringify(error))
-      })
-      command.stdout.on('data', line => {
-        stdoutput.current.value += line[0]
-        console.log(line)
-      })
-      
-      command.stderr.on('data', line => stdoutput.current.value = "14 : " + line); // "14 : " + JSON.stringify(line))
-    
-      command.spawn()
-        .then(data => {
-          setIsBuilding(true);
-          child = data
-        })
-        .catch(error => {
-          console.log("error : " + JSON.stringify(error))
-          stdoutput.current.value = JSON.stringify(error)
-        })
-      })
-      .catch(data => stdoutput.current.value = data );
-  }
-
-  const kill = () => {
-    child.kill()
-         .then(() => {
-           stdoutput.current.value += "Stopping process"
-           setIsBuilding(false);
-         })
-         .error(stdoutput.current.value += "An error appear when killing process")
+  const RunCommand = (arg: any) => {
+    if (arg === "BuildGraph") {
+      BuildGraph((PlatformType)
+        .then((data: any) => {
+          stdoutput.current.value += data;
+          })
+        );
+      setIsBuilding(true);
+    }
+    if (arg === "Kill") {
+      KillProcess
+        .then((data: any) => {
+          stdoutput.current.value += data;
+        });
+      setIsBuilding(false);
+    }
+    if (arg === "Setup")
+      SetupDependencies
+      .then((data: any) => {
+        stdoutput.current.value += data;
+      });
   }
 
   const openDialog = () => {
@@ -116,7 +75,8 @@ const App = () => {
           else {
             setValues("UE4Path", res);
             setUE4Path(res);
-          }    
+          } 
+          setUE4Path(res);   
         })
       });
     }
@@ -149,7 +109,7 @@ const App = () => {
       <Button 
         variant="contained" 
         color="primary"
-        onClick={e => spawn(UE4Path + 'Setup')}
+        onClick={() => RunCommand("Setup")}
       >
       Setup Dependencies
       </Button>
@@ -176,7 +136,7 @@ const App = () => {
           <Button 
             variant="contained" 
             color="primary" 
-            onClick={spawn}       
+            onClick={() => RunCommand("BuildGraph")}       
           >
           Start
           </Button>
@@ -185,7 +145,7 @@ const App = () => {
           <Button 
             variant="contained" 
             color="primary" 
-            onClick={kill}       
+            onClick={() => RunCommand("Kill")}       
           >
           Stop
           </Button>
