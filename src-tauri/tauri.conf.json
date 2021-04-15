@@ -45,6 +45,14 @@
         "timestampUrl": ""
       }
     },
+    "updater": {
+      "active": true,
+      "dialog": false,
+      "endpoints": [
+        ""
+      ],
+      "pubkey": ""
+    },
     "allowlist": {
       "all": true
     },
@@ -59,14 +67,6 @@
     ],
     "security": {
       "csp": "default-src blob: data: filesystem: ws: http: https: 'unsafe-eval' 'unsafe-inline'"
-    },
-    "updater": {
-      "active": true,
-      "dialog": false,
-      "endpoints": [
-        ""
-      ],
-      "pubkey": ""
     }
   }
 }
