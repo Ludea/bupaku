@@ -2890,9 +2890,9 @@ dependencies = [
 
 [[package]]
 name = "tauri"
-version = "1.0.0-beta-rc.0"
+version = "1.0.0-beta-rc.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f501914968484e629970617733e77e737f3fcd237273aa161cb89e76f83d7423"
+checksum = "d2132faee7c13668314f12a0593e871db264541d0a171afb7a8a45098b6bd9d9"
 dependencies = [
  "base64",
  "bytes",
@@ -3809,9 +3809,9 @@ dependencies = [
 
 [[package]]
 name = "zip"
-version = "0.5.11"
+version = "0.5.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8264fcea9b7a036a4a5103d7153e988dbc2ebbafb34f68a3c2d404b6b82d74b6"
+checksum = "9c83dc9b784d252127720168abd71ea82bf8c3d96b17dc565b5e2a02854f2b27"
 dependencies = [
  "byteorder",
  "bzip2",
