@@ -1,5 +1,5 @@
-import { invoke } from "@tauri-apps/api/dist/tauri";
-import { Command } from "@tauri-apps/api/dist/shell"
+import { invoke } from "@tauri-apps/api/tauri";
+import { Command } from "@tauri-apps/api/shell"
 
 let cmd: any;
 let args: any;
