@@ -14,8 +14,8 @@ import { getValues, setValues } from 'utils/Forage';
 import { BuildGraph, SetupDependencies, KillProcess } from 'utils/UE4Commands';
 
 //API
-import { open } from "@tauri-apps/api/dist/dialog";
-import { invoke } from "@tauri-apps/api/dist/tauri";
+import { open } from "@tauri-apps/api/dialog";
+import { invoke } from "@tauri-apps/api/tauri";
 
 const App = () => {
   const [UE4Path, setUE4Path] = useState<any>();
