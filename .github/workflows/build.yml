@@ -16,7 +16,7 @@ jobs:
       with:
         node-version: 12
     - name: install Rust stable
-      uses: actions-rs/toolchain@v1
+      uses: actions-rs/toolchain@v1.0.7
       with:
         toolchain: stable
     - name: install webkit2gtk (ubuntu only)
