@@ -31,7 +31,7 @@ export const SetupDependencies = new Promise((resolve, reject) => {
           break;
       }
 
-       //child = null
+       child = null
        const command = new Command(cmd, [...args, "Setup" + extensions])
        command.on('close', data => {
          child = null
