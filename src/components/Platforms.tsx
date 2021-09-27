@@ -34,8 +34,12 @@ const Platforms = (props: any) => {
 
     const handleChange = (event: any) => {
         setChecked((checked: any) => ({...checked, [event.target.name]: event.target.checked}));
+        let host = {
+            "name":event.target.name,
+            "value": event.target.checked
+        };
         setValues("Platforms", checked);
-        props.Platform({checked});
+        props.Platform({host});
     };
 
     return (

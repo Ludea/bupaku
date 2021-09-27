@@ -23,9 +23,9 @@ const App = () => {
   const [isBuilding, setIsBuilding] = useState<any>();
   const stdoutput = useRef<any>();
 
-  var PlatformType: any; 
-  const Platform = (data: any) => {  
-    PlatformType = data;
+  let PlatformType: any; 
+  const Platform = (data: any) => { 
+    PlatformType = data.host;
   };
 
   useEffect(() => {
@@ -38,11 +38,11 @@ const App = () => {
 
   const RunCommand = (arg: any) => {
     if (arg === "BuildGraph") {
-      BuildGraph((PlatformType)
+      console.log("buildgraph");
+      BuildGraph(PlatformType)
         .then((data: any) => {
           stdoutput.current.value += data;
-          })
-        );
+          });
       setIsBuilding(true);
     }
     if (arg === "Kill") {
