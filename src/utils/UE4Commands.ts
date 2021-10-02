@@ -4,7 +4,6 @@ import { Command } from "@tauri-apps/api/shell"
 let cmd: any;
 let args: any;
 let child: any;
-let extension: any ;
 
 const runCommand = (arg: any) => new Promise((resolve, reject) => {
   child = null
@@ -68,24 +67,31 @@ export const BuildGraph = (Platform: any ) => new Promise((resolve, reject) => {
      default: UATarguments = "";
    }
 
-   Extensions.then((value: any) => {
-     console.log("12 : " + value);
-     extension = value;
-   console.log("test : " + extension);
-
-   let UE4Path = 'F:/UnrealEngine';
-   let RunUATPath = UE4Path.concat('/Engine/Build/BatchFiles/RunUAT','.bat') ;
-   let target = "".concat( ' BuildGraph -Target="', 'Make Installed Build Win64"') ;
-   let XMLPath =  "".concat(' -script="', UE4Path, '/Engine/Build/InstalledEngineBuild.xml"') ;
-   
-   runCommand(RunUATPath + target + XMLPath + UATarguments )
-   .then(value => {
-     console.log("output : " + JSON.stringify(value));
-     resolve(value);
-   })
-   reject("");
+   Extensions
+    .then((extension: any) => {
+     Target
+      .then((target: any) => {
+        let UE4Path = 'F:/UnrealEngine';
+        let RunUATPath = UE4Path.concat('/Engine/Build/BatchFiles/RunUAT', extension) ;
+        let build_target = "".concat( ' BuildGraph -Target="', 'Make Installed Build ', target, '"' ) ;
+        let XMLPath =  "".concat(' -script="', UE4Path, '/Engine/Build/InstalledEngineBuild.xml"') ;
+        runCommand(RunUATPath + build_target + XMLPath + UATarguments )
+        .then(value => {
+          console.log("output : " + JSON.stringify(value));
+          resolve(value);
+        })
+        .catch(error => {
+          reject(error);
+        })
+      })
+      .catch(error => {
+        reject(error);
+      })
+    })
+    .catch(error => {
+        reject(error);
+    })
   });
- });
 
 export const SetupDependencies = new Promise((resolve, reject) => {
 
@@ -125,7 +131,7 @@ const Target = new Promise((resolve, reject) => {
       break;
       case 'linux': resolve('Linux');
       break;
-      default: reject("");
+      default: reject("Host not supported");
     }
   });
 });
