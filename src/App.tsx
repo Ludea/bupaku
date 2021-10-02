@@ -38,7 +38,6 @@ const App = () => {
 
   const RunCommand = (arg: any) => {
     if (arg === "BuildGraph") {
-      console.log("buildgraph");
       BuildGraph(PlatformType)
         .then((data: any) => {
           stdoutput.current.value += data;
