@@ -3,7 +3,6 @@ import { Command } from "@tauri-apps/api/shell"
 
 let cmd: any;
 let args: any;
-let extensions: any;
 let child: any;
 
 const runCommand = (arg: any) => new Promise((resolve, reject) => {
@@ -67,11 +66,16 @@ export const BuildGraph = (Platform: any ) => new Promise((resolve, reject) => {
      break;
      default: UATarguments = "";
    }
-   let UE4Path = "";
-   let RunUATPath = UE4Path + "/Engine/Build/BatchFiles/RunUAT" + ".bat" ;
-   let XMLPath =  " -script=" + UE4Path + "/Engine/Build/InstalledEngineBuild.xml" + "'" ;
-   let target = " -Target=" + "'" + "Make Installed Build Win64" + "'" ;
-   runCommand(RunUATPath )
+
+   Extensions.then(value =>
+    console.log("extensions : " + value)
+    );
+   let UE4Path = 'F:/UnrealEngine';
+   let RunUATPath = UE4Path.concat('/Engine/Build/BatchFiles/RunUAT','.bat') ;
+   let target = "".concat( ' BuildGraph -Target="', 'Make Installed Build Win64"') ;
+   let XMLPath =  "".concat(' -script="', UE4Path, '/Engine/Build/InstalledEngineBuild.xml"') ;
+   
+   runCommand(RunUATPath + target + XMLPath + UATarguments )
    .then(value => {
      console.log("output : " + JSON.stringify(value));
      resolve(value);
@@ -80,27 +84,7 @@ export const BuildGraph = (Platform: any ) => new Promise((resolve, reject) => {
  });
 
 export const SetupDependencies = new Promise((resolve, reject) => {
-    invoke("detect_os")
-    .then(data => {
-      switch (data) {
-        case 'windows': 
-          cmd = "powershell";
-          args = ['/C'];
-          extensions = '.bat'
-          break;
-        case 'macos': 
-          cmd = "sh"
-          args = ['-c'];
-          extensions = '.command'
-          break;
-        case 'linux': 
-          cmd = "sh"
-          args = ['-c'];
-          extensions = '.sh'
-          break;
-      }
 
-});
 });
 
 export const KillProcess = new Promise((resolve, reject) => {
@@ -110,3 +94,18 @@ export const KillProcess = new Promise((resolve, reject) => {
          })
          .error(reject("An error appear when killing process"));
   });
+
+const Extensions = new Promise((resolve, reject) => {
+  invoke("detect_os")
+  .then(data => {
+    switch (data) {
+      case 'windows': resolve('.bat');
+      break;
+      case 'macos': resolve('.command');
+      break;
+      case 'linux': resolve('.sh');
+      break;
+      default: reject("");
+    }
+  });
+});
