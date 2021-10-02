@@ -4,6 +4,7 @@ import { Command } from "@tauri-apps/api/shell"
 let cmd: any;
 let args: any;
 let child: any;
+let extension: any ;
 
 const runCommand = (arg: any) => new Promise((resolve, reject) => {
   child = null
@@ -67,9 +68,11 @@ export const BuildGraph = (Platform: any ) => new Promise((resolve, reject) => {
      default: UATarguments = "";
    }
 
-   Extensions.then(value =>
-    console.log("extensions : " + value)
-    );
+   Extensions.then((value: any) => {
+     console.log("12 : " + value);
+     extension = value;
+   console.log("test : " + extension);
+
    let UE4Path = 'F:/UnrealEngine';
    let RunUATPath = UE4Path.concat('/Engine/Build/BatchFiles/RunUAT','.bat') ;
    let target = "".concat( ' BuildGraph -Target="', 'Make Installed Build Win64"') ;
@@ -81,6 +84,7 @@ export const BuildGraph = (Platform: any ) => new Promise((resolve, reject) => {
      resolve(value);
    })
    reject("");
+  });
  });
 
 export const SetupDependencies = new Promise((resolve, reject) => {
@@ -105,9 +109,10 @@ const Extensions = new Promise((resolve, reject) => {
       break;
       case 'linux': resolve('.sh');
       break;
-      default: reject("");
+      default: reject("Host not supported");
     }
-  });
+  }
+);
 });
 
 const Target = new Promise((resolve, reject) => {
