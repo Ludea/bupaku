@@ -109,3 +109,18 @@ const Extensions = new Promise((resolve, reject) => {
     }
   });
 });
+
+const Target = new Promise((resolve, reject) => {
+  invoke("detect_os")
+  .then(data => {
+    switch (data) {
+      case 'windows': resolve('Win64');
+      break;
+      case 'macos': resolve('Mac');
+      break;
+      case 'linux': resolve('Linux');
+      break;
+      default: reject("");
+    }
+  });
+});
