@@ -7,8 +7,8 @@ let child: any;
 
 const runCommand = (arg: any) => new Promise((resolve, reject) => {
   child = null
-  console.log("arg :  " + arg);
-  const command = new Command(cmd, [...args, arg ])
+
+  const command = new Command(cmd, arg)
   command.on('close', data => {
     child = null
   })

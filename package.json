@@ -9,25 +9,20 @@
     "@tauri-apps/api": "^1.0.0-beta.8",
     "@tauri-apps/cli": "^1.0.0-beta.10",
     "@tauri-apps/tauri-forage": "^1.0.0-beta.2",
-    "@testing-library/jest-dom": "^5.14.1",
-    "@testing-library/react": "^12.1.1",
-    "@testing-library/user-event": "^13.2.1",
     "@types/jest": "^27.0.2",
     "@types/node": "^16.10.2",
     "@types/react": "^17.0.25",
     "@types/react-dom": "^17.0.9",
-    "cross-env": "^7.0.3",
+    "@vitejs/plugin-react": "^1.0.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-scripts": "4.0.3",
     "typescript": "^4.4.3",
-    "web-vitals": "^2.1.0"
+    "vite": "^2.6.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "serve": "vite preview",
     "tauri": "tauri"
   },
   "eslintConfig": {
