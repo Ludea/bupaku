@@ -7,6 +7,7 @@ let child: any;
 
 const runCommand = (arg: any) => new Promise((resolve, reject) => {
   child = null
+  console.log("arg :  " + arg);
   const command = new Command(cmd, [...args, arg ])
   command.on('close', data => {
     child = null
@@ -94,7 +95,22 @@ export const BuildGraph = (Platform: any ) => new Promise((resolve, reject) => {
   });
 
 export const SetupDependencies = new Promise((resolve, reject) => {
-
+  Extensions
+    .then((extension: any) => {
+      let UE4Path = 'F:/UnrealEngine';
+      let SetupPath = UE4Path.concat("/Setup", extension);
+      runCommand(SetupPath)
+      .then(value => {
+        console.log("Setup : " + value);
+        resolve(value);
+      })
+      .catch(error => {
+        reject(error);
+      })
+    .catch(error => {
+      reject(error);
+    })
+    })
 });
 
 export const KillProcess = new Promise((resolve, reject) => {
