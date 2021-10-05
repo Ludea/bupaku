@@ -29,7 +29,7 @@ const App = () => {
   };
 
   useEffect(() => {
-    getValues("UE4Path").then(value => {
+    getValues("UE4Path").then((value: any) => {
       if ( value != null)  {
         setUE4Path(value);
       }
