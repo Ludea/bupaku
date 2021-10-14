@@ -5,7 +5,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 
 //component
-import { getValues, setValues } from 'utils/Forage'
+import { getValue, saveValue } from 'utils/Storage'
 
 const Platforms = (props: any) => {
     const [checked, setChecked] = useState<any>({
@@ -25,7 +25,7 @@ const Platforms = (props: any) => {
     });
 
     useEffect(() => {
-        getValues("Platforms").then((state: any) => {
+        getValue("Platforms").then((state: any) => {
           if ( state != null)  {
             setChecked(state);
           }
@@ -38,7 +38,7 @@ const Platforms = (props: any) => {
             "name":event.target.name,
             "value": event.target.checked
         };
-        setValues("Platforms", checked);
+        saveValue("Platforms", checked);
         props.Platform({host});
     };
 
