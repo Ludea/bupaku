@@ -4,7 +4,7 @@ const stronghold = new Stronghold('./example.stronghold', 'password');
 const store = stronghold.getStore('exampleStoreVault', []);
 let location: Location;
 
-export const saveValue = async (key: string, value: string) => {
+export const saveValue = async (key: any, value: any) => {
     location = Location.generic(key, key);
 	await store.insert(location, value)
 	await stronghold.save()
