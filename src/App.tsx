@@ -10,7 +10,7 @@ import Button from '@material-ui/core/Button';
 
 //components
 import Platforms from 'components/Platforms';
-import { getValue, setValue } from 'utils/Storage';
+import { getValue, saveValue } from 'utils/Storage';
 import { BuildGraph, SetupDependencies, KillProcess } from 'utils/UE4Commands';
 
 //API
@@ -72,7 +72,7 @@ const App = () => {
           if (available_space < 100 )
             stdoutput.current.value = `Not enough space, you need at least 100G available and you have only ${available_space}G`  ;
           else {
-            setValue("UE4Path", res);
+            saveValue("UE4Path", res);
             setUE4Path(res);
           } 
           setUE4Path(res);   
