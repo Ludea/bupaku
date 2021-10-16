@@ -69,9 +69,9 @@ export const BuildGraph = (Platform: any ) => new Promise((resolve, reject) => {
    }
 
    Extensions
-    .then((extension: any) => {
+    .then(extension => {
      Target
-      .then((target: any) => {
+      .then(target => {
         let UE4Path = 'F:/UnrealEngine';
         let RunUATPath = UE4Path.concat('/Engine/Build/BatchFiles/RunUAT', extension) ;
         let build_target = "".concat( ' BuildGraph -Target="', 'Make Installed Build ', target, '"' ) ;
