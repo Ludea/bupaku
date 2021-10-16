@@ -94,7 +94,7 @@ export const BuildGraph = (Platform: any ) => new Promise((resolve, reject) => {
     })
   });
 
-export const SetupDependencies = new Promise((resolve, reject) => {
+export const SetupDependencies = () => new Promise((resolve, reject) => {
   Extensions
     .then((extension: any) => {
       let UE4Path = 'F:/UnrealEngine';
