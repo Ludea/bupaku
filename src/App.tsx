@@ -129,6 +129,12 @@ const App = () => {
         readOnly: true
         }}
       />
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'flex-end'
+        }}
+      >
       {
         !isBuilding ?
         (
@@ -150,6 +156,7 @@ const App = () => {
           </Button>
         )
       }
+      </Box>
       </div>
   );
 }
