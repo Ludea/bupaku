@@ -96,7 +96,7 @@ export const BuildGraph = (Platform: any ) => new Promise((resolve, reject) => {
 
 export const SetupDependencies = () => new Promise((resolve, reject) => {
   Extensions
-    .then((extension: any) => {
+    .then(extension => {
       let UE4Path = 'F:/UnrealEngine';
       let SetupPath = UE4Path.concat("/Setup", extension);
       runCommand(SetupPath)
@@ -121,7 +121,7 @@ export const KillProcess = new Promise((resolve, reject) => {
          .error(reject("An error appear when killing process"));
   });
 
-const Extensions = new Promise((resolve, reject) => {
+const Extensions = new Promise<string>((resolve, reject) => {
   invoke("detect_os")
   .then(data => {
     switch (data) {
@@ -137,7 +137,7 @@ const Extensions = new Promise((resolve, reject) => {
 );
 });
 
-const Target = new Promise((resolve, reject) => {
+const Target = new Promise<string>((resolve, reject) => {
   invoke("detect_os")
   .then(data => {
     switch (data) {
