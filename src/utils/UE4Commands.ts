@@ -2,8 +2,7 @@ import { invoke } from "@tauri-apps/api/tauri";
 import { Command } from "@tauri-apps/api/shell"
 
 let cmd: any;
-let args: any;
-let child: any;
+let child ;
 
 const runCommand = (arg: any) => new Promise((resolve, reject) => {
   child = null
