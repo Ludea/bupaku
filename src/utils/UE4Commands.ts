@@ -10,6 +10,7 @@ const runCommand = (arg: any, callback: any) => {
   const command = new Command("cmd", ["/C", arg])
   command.on('close', data => {
     child = null
+    callback({code: data.code, signal: data.signal});
   })
   command.on('error', error => {
     callback(error);

@@ -21,6 +21,7 @@ const App = () => {
   const [UE4Path, setUE4Path] = useState<any>();
   const [UE4Version, setUE4Version] = useState<any>();
   const [isBuilding, setIsBuilding] = useState<any>();
+  const [donwloadDeps, setDonwloadDeps] = useState<any>();
   const stdoutput = useRef<any>();
 
   let PlatformType: any; 
@@ -39,10 +40,12 @@ const App = () => {
   const RunCommand = (arg: any) => {
     stdoutput.current.value = "";
     if (arg === "BuildGraph") {
+      setIsBuilding(true);
       BuildGraph(PlatformType, (data: any) => {
         stdoutput.current.value += data + "\r";
-      })
-      setIsBuilding(true);
+        if (data.code === 0)
+          setIsBuilding(false);
+      });
     }
     if (arg === "Kill") {
       KillProcess
@@ -53,7 +56,10 @@ const App = () => {
     }
     if (arg === "Setup")
       SetupDependencies((data: any) => {
+        setDonwloadDeps(true);
         stdoutput.current.value += data + "\r";
+          if (data.code === 0)
+            setDonwloadDeps(true);
       });
   }
 
@@ -106,6 +112,7 @@ const App = () => {
       </FormControl>
       <Button 
         variant="contained" 
+        disabled={donwloadDeps}
         color="primary"
         onClick={() => RunCommand("Setup")}
       >
