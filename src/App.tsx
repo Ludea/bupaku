@@ -38,10 +38,9 @@ const App = () => {
 
   const RunCommand = (arg: any) => {
     if (arg === "BuildGraph") {
-      BuildGraph(PlatformType)
-        .then((data: any) => {
-          stdoutput.current.value += data;
-          });
+      BuildGraph(PlatformType, (data: any) => {
+        stdoutput.current.value += data;
+      })
       setIsBuilding(true);
     }
     if (arg === "Kill") {
@@ -52,9 +51,8 @@ const App = () => {
       setIsBuilding(false);
     }
     if (arg === "Setup")
-      SetupDependencies
-      .then((data: any) => {
-        stdoutput.current.value += data;
+      SetupDependencies((data: any) => {
+        stdoutput.current.value += data + "\r";
       });
   }
 
@@ -141,7 +139,10 @@ const App = () => {
           <Button 
             variant="contained" 
             color="primary" 
-            onClick={() => RunCommand("BuildGraph")}       
+            onClick={() => {
+              RunCommand("BuildGraph")
+              }
+            }       
           >
           Start
           </Button>

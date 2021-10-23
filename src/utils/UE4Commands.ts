@@ -1,28 +1,27 @@
+import { useContext } from 'react';
 import { invoke } from "@tauri-apps/api/tauri";
-import { Command } from "@tauri-apps/api/shell"
+import { Command } from "@tauri-apps/api/shell";
+import { callbackify } from 'util';
 
 let cmd: any;
-let child ;
+let child: any ;
 
-const runCommand = (arg: any) => new Promise((resolve, reject) => {
+const runCommand = (arg: any, callback: any) => {
   child = null
 
-  const command = new Command(cmd, arg)
+  const command = new Command("cmd", ["/C", arg])
   command.on('close', data => {
     child = null
   })
   command.on('error', error => {
-    console.log("issue : " + JSON.stringify(error));
-   resolve(JSON.stringify(error));
+    callback(error);
   })
   command.stdout.on('data', line => {
-    console.log("data : " + JSON.stringify(line));
-    resolve(line);
+    callback(line);
   })
   
   command.stderr.on('data', line => {
-    console.log("error : " + JSON.stringify(line));
-    resolve(line)
+    callback(line);
   }); 
 
   command.spawn()
@@ -31,11 +30,11 @@ const runCommand = (arg: any) => new Promise((resolve, reject) => {
       child = data
     })
     .catch(error => {
-       reject(JSON.stringify(error))
+       callback(error);
     })
-});
+};
 
-export const BuildGraph = (Platform: any ) => new Promise((resolve, reject) => {
+export const BuildGraph = (Platform: any, callback: any ) => {
    let UATarguments: string;
    switch (Platform.name){
      case "HostOnly": UATarguments = " -Set:HostPlatformOnly=" + Platform.value;
@@ -68,49 +67,36 @@ export const BuildGraph = (Platform: any ) => new Promise((resolve, reject) => {
    }
 
    Extensions
-    .then(extension => {
+    .then((extension: any) => {
      Target
-      .then(target => {
+       .then((target: any) => {
         let UE4Path = 'F:/UnrealEngine';
         let RunUATPath = UE4Path.concat('/Engine/Build/BatchFiles/RunUAT', extension) ;
         let build_target = "".concat( ' BuildGraph -Target="', 'Make Installed Build ', target, '"' ) ;
         let XMLPath =  "".concat(' -script="', UE4Path, '/Engine/Build/InstalledEngineBuild.xml"') ;
-        runCommand(RunUATPath + build_target + XMLPath + UATarguments )
-        .then(value => {
-          console.log("output : " + JSON.stringify(value));
-          resolve(value);
-        })
-        .catch(error => {
-          reject(error);
-        })
+        runCommand(RunUATPath + build_target + XMLPath + UATarguments, (output: any) => {
+              callback(output)
+        } )
       })
-      .catch(error => {
-        reject(error);
+      .catch((error: any) => {
+        callback(error);
       })
     })
-    .catch(error => {
-        reject(error);
+    .catch((error: any) => {
+        callback(error);
     })
-  });
+};
 
-export const SetupDependencies = new Promise((resolve, reject) => {
+export const SetupDependencies = (callback: any) => {
   Extensions
     .then(extension => {
       let UE4Path = 'F:/UnrealEngine';
       let SetupPath = UE4Path.concat("/Setup", extension);
-      runCommand(SetupPath)
-      .then(value => {
-        console.log("Setup : " + value);
-        resolve(value);
+      runCommand(SetupPath, (output: any) => {
+          callback(output);
       })
-      .catch(error => {
-        reject(error);
-      })
-    .catch(error => {
-      reject(error);
     })
-    })
-});
+};
 
 export const KillProcess = new Promise((resolve, reject) => {
     child.kill()

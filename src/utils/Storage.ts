@@ -1,4 +1,4 @@
-import { Stronghold, Location } from 'tauri-plugin-stronghold-api'
+import { Stronghold, Location } from 'tauri-plugin-stronghold-api' ;
 
 const stronghold = new Stronghold('./example.stronghold', 'password');
 const store = stronghold.getStore('exampleStoreVault', []);
