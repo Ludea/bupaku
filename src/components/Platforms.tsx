@@ -38,7 +38,7 @@ const Platforms = (props: any) => {
             "name":event.target.name,
             "value": event.target.checked
         };
-        saveValue("Platforms", checked);
+        saveValue(event.target.name, event.target.checked.toString());
         props.Platform({host});
     };
 
