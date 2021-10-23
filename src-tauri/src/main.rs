@@ -3,10 +3,12 @@
   windows_subsystem = "windows"
 )]
 
+use tauri_plugin_stronghold::TauriStronghold;
 mod cmd;
 
 fn main() {
   tauri::Builder::default()
+    .plugin(TauriStronghold::default())
     .on_page_load(|window, _payload| {
       window.listen("tauri://update-available".to_string(), move |msg| {
         println!("New version available: {:?}", msg);
