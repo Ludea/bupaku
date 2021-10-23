@@ -1,7 +1,5 @@
-import { useContext } from 'react';
 import { invoke } from "@tauri-apps/api/tauri";
 import { Command } from "@tauri-apps/api/shell";
-import { callbackify } from 'util';
 
 let cmd: any;
 let child: any ;
