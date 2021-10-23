@@ -6,7 +6,8 @@ authors = [ "you" ]
 license = ""
 repository = ""
 default-run = "bupaku"
-edition = "2018"
+edition = "2021"
+rust-version = "1.56"
 build = "src/build.rs"
 
 [build-dependencies]
@@ -17,6 +18,10 @@ fs2 = "0.4.3"
 serde_json = "1.0"
 serde = { version = "1.0", features = [ "derive" ] }
 tauri = { version = "1.0.0-beta.8", features = ["api-all", "updater"] }
+
+  [dependencies.tauri-plugin-stronghold]
+  git = "https://github.com/tauri-apps/tauri-plugin-stronghold"
+  branch = "main"
 
 [features]
 default = [ "custom-protocol" ]
