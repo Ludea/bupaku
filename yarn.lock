@@ -4002,9 +4002,9 @@ tar-stream@^2.1.4:
     inherits "^2.0.3"
     readable-stream "^3.1.1"
 
-"tauri-plugin-stronghold-api@github:tauri-apps/tauri-plugin-stronghold#ca343163f1e6a3aa780e566505f84ba15074ea32":
+"tauri-plugin-stronghold-api@github:tauri-apps/tauri-plugin-stronghold#647da429300d2886479ceabdcebf9bb5b0dda78f":
   version "0.1.0"
-  resolved "https://codeload.github.com/tauri-apps/tauri-plugin-stronghold/tar.gz/ca343163f1e6a3aa780e566505f84ba15074ea32"
+  resolved "https://codeload.github.com/tauri-apps/tauri-plugin-stronghold/tar.gz/647da429300d2886479ceabdcebf9bb5b0dda78f"
   dependencies:
     "@tauri-apps/api" "^1.0.0-beta.4"
     tslib "^2.1.0"
