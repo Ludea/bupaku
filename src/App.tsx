@@ -37,9 +37,10 @@ const App = () => {
   }, []);
 
   const RunCommand = (arg: any) => {
+    stdoutput.current.value = "";
     if (arg === "BuildGraph") {
       BuildGraph(PlatformType, (data: any) => {
-        stdoutput.current.value += data;
+        stdoutput.current.value += data + "\r";
       })
       setIsBuilding(true);
     }
