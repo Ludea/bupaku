@@ -19,7 +19,7 @@ import { invoke } from "@tauri-apps/api/tauri";
 
 const App = () => {
   const [UE4Path, setUE4Path] = useState<any>();
-  const [UE4Version, setUE4Version] = useState<any>();
+  const [UE4Version, setUE4Version] = useState<any>(4.27);
   const [isBuilding, setIsBuilding] = useState<any>();
   const [donwloadDeps, setDonwloadDeps] = useState<any>();
   const stdoutput = useRef<any>();
@@ -35,7 +35,14 @@ const App = () => {
         setUE4Path(value);
       }
     });
-  }, []);
+
+    getValue("UE4Version")
+    .then((version: any) => {
+        setUE4Version(version);
+    })
+    .catch(() => {
+    })
+  });
 
   const RunCommand = (arg: any) => {
     stdoutput.current.value = "";
@@ -118,6 +125,7 @@ const App = () => {
         >
           <MenuItem value={4.25}>4.25</MenuItem>
           <MenuItem value={4.26}>4.26</MenuItem>
+          <MenuItem value={4.27}>4.27</MenuItem>
         </Select>
       </FormControl>
       <Button 
