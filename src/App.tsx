@@ -31,7 +31,7 @@ const App = () => {
 
   useEffect(() => {
     getValue("UE4Path").then((value: any) => {
-      if ( value != null)  {
+      if ( value != undefined)  {
         setUE4Path(value);
       }
     });
@@ -40,12 +40,17 @@ const App = () => {
   const RunCommand = (arg: any) => {
     stdoutput.current.value = "";
     if (arg === "BuildGraph") {
-      setIsBuilding(true);
-      BuildGraph(PlatformType, (data: any) => {
-        stdoutput.current.value += data + "\r";
-        if (data.code === 0)
-          setIsBuilding(false);
-      });
+      if (UE4Path === undefined) {
+        stdoutput.current.value = "Please set UE4 directory";
+      }
+      else {
+        setIsBuilding(true);
+        BuildGraph(PlatformType, UE4Path, (data: any) => {
+          stdoutput.current.value += data + "\r";
+          if (data.code === 0)
+            setIsBuilding(false);
+        });
+      }
     }
     if (arg === "Kill") {
       KillProcess
@@ -55,12 +60,17 @@ const App = () => {
       setIsBuilding(false);
     }
     if (arg === "Setup")
-      SetupDependencies((data: any) => {
-        setDonwloadDeps(true);
-        stdoutput.current.value += data + "\r";
+      if (UE4Path === undefined) {
+        stdoutput.current.value = "Please set UE4 directory";
+      }
+      else {
+        SetupDependencies(UE4Path, (data: any) => {
+          setDonwloadDeps(true);
+          stdoutput.current.value += data + "\r";
           if (data.code === 0)
             setDonwloadDeps(true);
-      });
+        });
+      }
   }
 
   const openDialog = () => {

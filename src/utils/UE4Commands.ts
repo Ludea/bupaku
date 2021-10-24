@@ -6,6 +6,7 @@ let child: any ;
 
 const runCommand = (arg: any, callback: any) => {
   child = null
+  console.log(arg);
 
   const command = new Command("cmd", ["/C", arg])
   command.on('close', data => {
@@ -33,7 +34,7 @@ const runCommand = (arg: any, callback: any) => {
     })
 };
 
-export const BuildGraph = (Platform: any, callback: any ) => {
+export const BuildGraph = (Platform: any, Path: any, callback: any ) => {
    let UATarguments: string;
    switch (Platform.name){
      case "HostOnly": UATarguments = " -Set:HostPlatformOnly=" + Platform.value;
@@ -69,7 +70,7 @@ export const BuildGraph = (Platform: any, callback: any ) => {
     .then((extension: any) => {
      Target
        .then((target: any) => {
-        let UE4Path = 'F:/UnrealEngine';
+        let UE4Path = Path;
         let RunUATPath = UE4Path.concat('/Engine/Build/BatchFiles/RunUAT', extension) ;
         let build_target = "".concat( ' BuildGraph -Target="', 'Make Installed Build ', target, '"' ) ;
         let XMLPath =  "".concat(' -script="', UE4Path, '/Engine/Build/InstalledEngineBuild.xml"') ;
@@ -86,10 +87,10 @@ export const BuildGraph = (Platform: any, callback: any ) => {
     })
 };
 
-export const SetupDependencies = (callback: any) => {
+export const SetupDependencies = (Path: any, callback: any) => {
   Extensions
     .then(extension => {
-      let UE4Path = 'F:/UnrealEngine';
+      let UE4Path = Path;
       let SetupPath = UE4Path.concat("/Setup", extension);
       runCommand(SetupPath, (output: any) => {
           callback(output);
