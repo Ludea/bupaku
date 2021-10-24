@@ -6,7 +6,6 @@ let child: any ;
 
 const runCommand = (arg: any, callback: any) => {
   child = null
-  console.log(arg);
 
   const command = new Command("cmd", ["/C", arg])
   command.on('close', data => {
