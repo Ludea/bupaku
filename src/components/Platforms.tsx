@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import Box from '@material-ui/core/Box';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
+import Box from '@mui/material/Box';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 
 //component
 import { getValue, saveValue } from 'utils/Storage'
@@ -24,13 +24,13 @@ const Platforms = (props: any) => {
         Hololens: false,
     });
 
-    useEffect(() => {
+    /*useEffect(() => {
         getValue("Platforms").then((state: any) => {
           if ( state != null)  {
             setChecked(state);
           }
         });
-      }, []);
+      }, []);*/
 
     const handleChange = (event: any) => {
         setChecked((checked: any) => ({...checked, [event.target.name]: event.target.checked}));
@@ -38,6 +38,7 @@ const Platforms = (props: any) => {
             "name":event.target.name,
             "value": event.target.checked
         };
+
         saveValue(event.target.name, event.target.checked.toString());
         props.Platform({host});
     };
