@@ -128,14 +128,26 @@ const App = () => {
           <MenuItem value={4.27}>4.27</MenuItem>
         </Select>
       </FormControl>
-      <Button 
-        variant="contained" 
-        disabled={donwloadDeps}
-        color="primary"
-        onClick={() => RunCommand("Setup")}
-      >
-      Setup Dependencies
-      </Button>
+      {
+        !donwloadDeps ? (
+          <Button 
+            variant="contained" 
+            color="primary"
+            onClick={() => RunCommand("Setup")}
+          >
+          Setup Dependencies
+          </Button>
+        ) :  
+        (
+          <Button 
+            variant="contained" 
+            color="primary"
+            onClick={() => RunCommand("Kill")}
+          >
+          Stop Setup Dependencies
+          </Button>
+        )
+      }
       <Platforms Platform={Platform} />
       </Grid>
       </Grid>
