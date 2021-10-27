@@ -104,30 +104,34 @@ const App = () => {
 
   return (
     <div>
-    <Box sx={{ flexGrow: 1 }}>
-      <Grid container spacing={3}>
-        <Grid item xs={6}>
-      <TextField
-        id="UE4Path"
-        label="UE4 path"
-        value={UE4Path}
-        margin="normal"
-        inputProps={{ 'aria-label': 'bare' }}
-        onClick={openDialog}
-      />
-      <FormControl>
-        <InputLabel id="demo-simple-select-label">UE4 Version</InputLabel>
-        <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          value={UE4Version}
-          onChange={event => setUE4Version(event.target.value)}
-        >
-          <MenuItem value={4.25}>4.25</MenuItem>
-          <MenuItem value={4.26}>4.26</MenuItem>
-          <MenuItem value={4.27}>4.27</MenuItem>
-        </Select>
-      </FormControl>
+      <Box sx={{ flexGrow: 1 }}>
+        <Grid container spacing={1}>
+          <Grid item>
+            <TextField
+              id="UE4Path"
+              label="UE4 path"
+              value={UE4Path}
+              inputProps={{ 'aria-label': 'bare' }}
+              onClick={openDialog}
+            />
+          </Grid>
+          <Grid item>
+            <FormControl>
+              <InputLabel id="demo-simple-select-label">UE4 Version</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={UE4Version}
+                  onChange={event => setUE4Version(event.target.value)}
+                > 
+                  <MenuItem value={4.25}>4.25</MenuItem>
+                  <MenuItem value={4.26}>4.26</MenuItem>
+                  <MenuItem value={4.27}>4.27</MenuItem>
+                </Select>
+            </FormControl>
+          </Grid>
+        </Grid>
+      </Box>  
       {
         !donwloadDeps ? (
           <Button 
@@ -149,9 +153,7 @@ const App = () => {
         )
       }
       <Platforms Platform={Platform} />
-      </Grid>
-      </Grid>
-      </Box>
+
       <TextField
         id="outlined-multiline-static"
         multiline
@@ -177,6 +179,7 @@ const App = () => {
           <Button 
             variant="contained" 
             color="primary" 
+            disabled={donwloadDeps}
             onClick={() => {
               RunCommand("BuildGraph")
               }
