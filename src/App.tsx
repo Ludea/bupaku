@@ -116,11 +116,11 @@ const App = () => {
             />
           </Grid>
           <Grid item>
-            <FormControl>
-              <InputLabel id="demo-simple-select-label">UE4 Version</InputLabel>
+            <FormControl sx={{ minWidth: 120 }}>
+              <InputLabel id="ue4version">UE4 Version</InputLabel>
                 <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
+                  labelId="ue4version"
+                  id="UE4Version"
                   value={UE4Version}
                   onChange={event => setUE4Version(event.target.value)}
                 > 
