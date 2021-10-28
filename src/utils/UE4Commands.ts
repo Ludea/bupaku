@@ -64,7 +64,7 @@ export const BuildGraph = (Platform: any, Path: any, callback: any ) => {
         break;
         case "Hololens": UATarguments =+ " -Set:WithHololens=" + Platform.value;
         break;
-        default: UATarguments = "prout";
+        default: UATarguments = "";
       }
     }
    Extensions
