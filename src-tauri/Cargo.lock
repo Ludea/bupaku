@@ -4793,7 +4793,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-stronghold"
 version = "0.1.0"
-source = "git+https://github.com/tauri-apps/tauri-plugin-stronghold?branch=main#d559d79da4e33add81ee902165db45dc39331e5c"
+source = "git+https://github.com/tauri-apps/tauri-plugin-stronghold?branch=main#3bbc0a98d4d0df1298f5d4ac3cd046019678fd21"
 dependencies = [
  "async-std",
  "hex",
