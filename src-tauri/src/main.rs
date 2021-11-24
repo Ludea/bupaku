@@ -16,7 +16,8 @@ fn main() {
       })
     .invoke_handler(tauri::generate_handler![
       cmd::detect_os,
-      cmd::get_available_space
+      cmd::get_available_space,
+      cmd::clone
     ])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");

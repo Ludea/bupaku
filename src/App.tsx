@@ -16,20 +16,33 @@ import { BuildGraph, SetupDependencies, KillProcess } from 'utils/UE4Commands';
 //API
 import { open } from "@tauri-apps/api/dialog";
 import { invoke } from "@tauri-apps/api/tauri";
+import { listen } from '@tauri-apps/api/event'
 
 const App = () => {
   const [UE4Path, setUE4Path] = useState<any>("");
+  const [UE4Github, setUE4Github] = useState<any>("https://github.com/EpicGames/UnrealEngine");
   const [UE4Version, setUE4Version] = useState<any>(4.27);
   const [isBuilding, setIsBuilding] = useState<any>();
   const [donwloadDeps, setDonwloadDeps] = useState<any>();
   const stdoutput = useRef<any>();
 
-  let PlatformType: any; 
+  let PlatformType: any;
   const Platform = (data: any) => { 
     PlatformType = data.host;
   };
 
   useEffect(() => {
+    const unlisten = listen('objects', (event: any) => {
+      stdoutput.current.value = "";
+      stdoutput.current.value = "Receiving object : " + event.payload.network_pct + "%" + " (" + event.payload.received_objects + "/" + event.payload.total_objects + "), " + event.payload.size + "KiB" ;
+    })
+
+    getValue("UE4Github").then((value: any) => {
+      if ( value != undefined)  {
+        setUE4Github(value);
+      }
+    });
+
     getValue("UE4Path").then((value: any) => {
       if ( value != undefined)  {
         setUE4Path(value);
@@ -78,6 +91,13 @@ const App = () => {
             setDonwloadDeps(true);
         });
       }
+      if ( arg === "clone")
+        invoke("clone", { args: {
+          arg_url: UE4Github, arg_path: UE4Path}
+        })
+        .then((value) => {
+          stdoutput.current.value = value ;
+        })
   }
 
   const openDialog = () => {
@@ -104,8 +124,17 @@ const App = () => {
 
   return (
     <div>
-      <Box sx={{ flexGrow: 1 }}>
+       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={1}>
+          <Grid item>
+            <TextField
+              id="UE4 git"
+              label="UE4 Github"
+              value={UE4Github}
+              inputProps={{ 'aria-label': 'bare' }}
+              onClick={openDialog}
+            />
+          </Grid>
           <Grid item>
             <TextField
               id="UE4Path"
@@ -132,6 +161,13 @@ const App = () => {
           </Grid>
         </Grid>
       </Box>  
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => RunCommand("clone")}
+      >
+      Clone
+      </Button>
       {
         !donwloadDeps ? (
           <Button 
