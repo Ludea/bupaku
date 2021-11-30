@@ -10,6 +10,9 @@ import FormLabel from '@mui/material/FormLabel';
 //components
 import { saveValue } from 'utils/Storage';
 
+//API
+import { invoke } from "@tauri-apps/api/tauri";
+
 const LoginDialog = ({openDialog, closeDialog, isConnected, anchorEl}: any) => {
     const [login, setLogin] = useState("");
     const [PAT, setPAT] = useState("");
@@ -19,7 +22,7 @@ const LoginDialog = ({openDialog, closeDialog, isConnected, anchorEl}: any) => {
     const open = Boolean(anchorEl);
     const id = open ? 'simple-popover' : undefined;
 
-    const Login = () => {
+    const handleLogin = () => {
         if (login === "") 
             setIsLoginEmpty(true)
         else {
@@ -33,16 +36,24 @@ const LoginDialog = ({openDialog, closeDialog, isConnected, anchorEl}: any) => {
                 handleConnection();
             }
         }
-    }
+    };
 
     const handleClose = () => {
         closeDialog() ;
-    }
+    };
 
     const handleConnection = () => {
+        invoke("getuerepopermission", 
+        { token: PAT })
+        .then((value: any) => {
+            console.log(value);
+        })
+        .catch((value: any) => {
+            console.log(value);
+        });
         isConnected();
         closeDialog() ;
-    }
+    };
 
     return (
         <Popover
@@ -83,7 +94,7 @@ const LoginDialog = ({openDialog, closeDialog, isConnected, anchorEl}: any) => {
                     /> 
                     </CardContent>
                     <CardActions>
-                        <Button variant="contained" onClick={ Login }>
+                        <Button variant="contained" onClick={ handleLogin }>
                         Sign In
                         </Button>
                         <Button variant="contained" onClick={ handleClose }>
