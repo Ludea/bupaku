@@ -12,9 +12,9 @@ import { saveValue } from 'utils/Storage';
 
 const LoginDialog = ({openDialog, closeDialog, isConnected, anchorEl}: any) => {
     const [login, setLogin] = useState("");
-    const [password, setPassword] = useState("");
-    const [isLoginEmpty, setIsLoginEmpty] = useState<Boolean>();
-    const [isPasswordEmpty, setIsPasswordEmpty] = useState<Boolean>(false);
+    const [PAT, setPAT] = useState("");
+    const [isLoginEmpty, setIsLoginEmpty] = useState<Boolean>(false);
+    const [isPATEmpty, setIsPATEmpty] = useState<Boolean>(false);
 
     const open = Boolean(anchorEl);
     const id = open ? 'simple-popover' : undefined;
@@ -24,12 +24,12 @@ const LoginDialog = ({openDialog, closeDialog, isConnected, anchorEl}: any) => {
             setIsLoginEmpty(true)
         else {
             setIsLoginEmpty(false)
-            if (password === "")
-                setIsPasswordEmpty(true)
+            if (PAT === "")
+            setIsPATEmpty(true)
             else {
-                setIsPasswordEmpty(false);
+                setIsPATEmpty(false);
                 saveValue("username", login );
-                saveValue("password", password );
+                saveValue("PAT", PAT );
                 handleConnection();
             }
         }
@@ -65,7 +65,7 @@ const LoginDialog = ({openDialog, closeDialog, isConnected, anchorEl}: any) => {
                         autoFocus
                         margin="dense"
                         id="login"
-                        label="Login"
+                        label="Github Login or Email "
                         type="email"
                         fullWidth
                         variant="standard"
@@ -74,12 +74,12 @@ const LoginDialog = ({openDialog, closeDialog, isConnected, anchorEl}: any) => {
                     <TextField
                         autoFocus
                         margin="dense"
-                        id="password"
+                        id="PAT"
                         label="Personal Access Token"
                         type="password"
                         fullWidth
                         variant="standard"
-                        onChange={event => setPassword(event.target.value)}
+                        onChange={event => setPAT(event.target.value)}
                     /> 
                     </CardContent>
                     <CardActions>
@@ -93,12 +93,14 @@ const LoginDialog = ({openDialog, closeDialog, isConnected, anchorEl}: any) => {
                 {
                     isLoginEmpty ?
                     <FormLabel component="legend">
+                    Please fill your Github username or Email
                     </FormLabel>
                     : null
                 }
                 {
-                    isPasswordEmpty ?
+                    isPATEmpty ?
                     <FormLabel component="legend">
+                    Please fill your Personal Access Token
                     </FormLabel>
                     : null
                 }
