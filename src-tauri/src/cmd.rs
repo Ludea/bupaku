@@ -1,4 +1,4 @@
-use serde::{Deserialize};
+use serde::{Deserialize, Serialize};
 use tauri::{Window, command};
 use std::env;
 use std::path::{Path, PathBuf};
@@ -6,6 +6,7 @@ use std::io::{self, Write};
 use git2::build::{CheckoutBuilder, RepoBuilder};
 use git2::{FetchOptions, Progress, RemoteCallbacks};
 use std::cell::RefCell;
+use octocrab::Octocrab;
 
 #[derive(Deserialize)]
 pub struct Args {
@@ -13,7 +14,7 @@ pub struct Args {
     arg_path: String,
 }
 
-#[derive(Clone, serde::Serialize)]
+#[derive(Clone, Serialize)]
 struct Payload {
   network_pct: usize,
   received_objects: usize,
@@ -21,6 +22,17 @@ struct Payload {
   indexed_deltas: usize,
   total_deltas: usize,
   size: usize,
+}
+
+#[derive(Serialize)]
+pub enum Error {
+    GHError{ description: String }
+}
+
+impl From<octocrab::Error> for Error {
+    fn from(error: octocrab::Error) -> Self {
+        Self::GHError { description: error.to_string() }
+    }
 }
 
 struct State {
@@ -125,4 +137,19 @@ pub fn clone(args: Args, window: Window) {
     println!();
 
    // Ok(())
+}
+
+#[command]
+pub async fn getuerepopermission(token: String) -> Result<(), Error> {
+    let octocrab = Octocrab::builder().personal_token(token).build()?;
+
+    let repo = octocrab.repos("rust-lang", "rust").get().await?;
+
+    println!(
+        "{} has {} stars",
+        repo.full_name.unwrap(),
+        repo.stargazers_count.unwrap_or(0)
+    );
+
+    Ok(())
 }
