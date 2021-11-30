@@ -7,10 +7,13 @@ import Select from '@mui/material/Select';
 import FormControl from '@mui/material/FormControl';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import GitHubIcon from '@mui/icons-material/GitHub';
 
 //components
 import Platforms from 'components/Platforms';
 import { getValue, saveValue } from 'utils/Storage';
+import LoginDialog from 'components/LoginDialog';
 import { BuildGraph, SetupDependencies, KillProcess } from 'utils/UE4Commands';
 
 //API
@@ -21,6 +24,8 @@ import { listen } from '@tauri-apps/api/event'
 const App = () => {
   const [UE4Path, setUE4Path] = useState<any>("");
   const [UE4Github, setUE4Github] = useState<any>("https://github.com/EpicGames/UnrealEngine");
+  const [openLoginDialog, setOpenLoginDialog] = useState<Boolean>(false);
+  const [anchorEl, setAnchorEl] = useState<any>(null);
   const [UE4Version, setUE4Version] = useState<any>(4.27);
   const [isBuilding, setIsBuilding] = useState<any>();
   const [donwloadDeps, setDonwloadDeps] = useState<any>();
@@ -56,6 +61,16 @@ const App = () => {
     .catch(() => {
     })
   });
+
+  const handleOpenLoginDialog = (event: any) => {
+    setOpenLoginDialog(true);
+    setAnchorEl(event.currentTarget);
+  }
+
+  const CloseLoginDialog = () => {
+    setOpenLoginDialog(false);
+  }
+
 
   const RunCommand = (arg: any) => {
     stdoutput.current.value = "";
@@ -126,6 +141,23 @@ const App = () => {
     <div>
        <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={1}>
+          <IconButton 
+            color="primary" 
+            aria-label="upload picture" 
+            component="span"
+            onClick={handleOpenLoginDialog}
+            sx={{
+              position: 'fixed' ,
+              right: 0
+            }}>
+            <GitHubIcon />
+          </IconButton>
+          <LoginDialog 
+            openDialog={openLoginDialog} 
+            closeDialog={CloseLoginDialog} 
+            anchorEl={anchorEl}
+          >
+          </LoginDialog>
           <Grid item>
             <TextField
               id="UE4 git"
