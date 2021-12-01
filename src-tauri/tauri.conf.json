@@ -51,7 +51,7 @@
       "endpoints": [
         ""
       ],
-      "pubkey": ${{ secrets.PUBKEY }} 
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDFENzE1ODZBREM0N0JEMjgKUldRb3ZVZmNhbGh4SFVKZTBkRE9yZGVDMFZQRGN2WFJNemloUDdxS0dBWjNpTmdIeDhUaHAyN1YK"
     },
     "allowlist": {
       "all": true
