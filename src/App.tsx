@@ -47,13 +47,15 @@ const App = () => {
       if ( value != undefined)  {
         setUE4Github(value);
       }
-    });
+    })
+    .catch(() =>{});
 
     getValue("UE4Path").then((value: any) => {
       if ( value != undefined)  {
         setUE4Path(value);
       }
-    });
+    })
+    .catch(() =>{});
 
     getValue("UE4Version")
     .then((version: any) => {
