@@ -13,14 +13,14 @@ export const saveValue = async (key: any, value: any) => {
 export const getValue = (key: string) => new Promise((resolve, reject) => {
     location = Location.generic(key, key);
     store.get(location)
-		.then((value: string) => resolve(value))
-		.catch((value: string) => reject(value))
+		.then((value: any) => resolve(value))
+		.catch((value: any) => reject(value))
 });
 
 export const Delete = (key: string) => new Promise((resolve, reject) => {
     location = Location.generic(key, key);
     store.remove(location)
-    .then((value: string) => resolve(value))
-    .catch((value: string) => reject(value))
+    .then((value: any) => resolve(value))
+    .catch((value: any) => reject(value))
 });
 
