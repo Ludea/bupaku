@@ -28,6 +28,7 @@ const App = () => {
   const [anchorEl, setAnchorEl] = useState<any>(null);
   const [UE4Version, setUE4Version] = useState<any>(4.27);
   const [isBuilding, setIsBuilding] = useState<any>();
+  const [isGHConnected, setisGHConnected] = useState<any>();
   const [donwloadDeps, setDonwloadDeps] = useState<any>();
   const stdoutput = useRef<any>();
 
@@ -71,6 +72,9 @@ const App = () => {
     setOpenLoginDialog(false);
   }
 
+  const Connected = () => {
+    setisGHConnected(true);
+  }
 
   const RunCommand = (arg: any) => {
     stdoutput.current.value = "";
@@ -156,6 +160,7 @@ const App = () => {
             openDialog={openLoginDialog} 
             closeDialog={CloseLoginDialog} 
             anchorEl={anchorEl}
+            isConnected={Connected}
           >
           </LoginDialog>
           <Grid item>
