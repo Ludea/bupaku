@@ -4,9 +4,11 @@ use std::env;
 use std::path::{Path, PathBuf};
 use std::io::{self, Write};
 use git2::build::{CheckoutBuilder, RepoBuilder};
+use git2::{Error, Repository};
 use git2::{FetchOptions, Progress, RemoteCallbacks};
 use std::cell::RefCell;
 use octocrab::Octocrab;
+use semver::{Version};
 
 #[derive(Deserialize)]
 pub struct Args {
@@ -25,11 +27,11 @@ struct Payload {
 }
 
 #[derive(Serialize)]
-pub enum Error {
+pub enum AError {
     GHError{ description: String }
 }
 
-impl From<octocrab::Error> for Error {
+impl From<octocrab::Error> for AError {
     fn from(error: octocrab::Error) -> Self {
         Self::GHError { description: error.to_string() }
     }
@@ -140,7 +142,8 @@ pub fn clone(args: Args, window: Window) {
 }
 
 #[command]
-pub async fn getuerepopermission(token: String) -> Result<(), Error> {
+pub async fn getuerepopermission(token: String) -> Result<(), AError> {
+
     let octocrab = Octocrab::builder().personal_token(token).build()?;
 
     let repo = octocrab.repos("rust-lang", "rust").get().await?;
@@ -152,4 +155,21 @@ pub async fn getuerepopermission(token: String) -> Result<(), Error> {
     );
 
     Ok(())
+}
+
+fn localtag(path: &Path) -> Result<String, Error> {
+    let repo = Repository::open(path)?;
+
+    let mut latest: Version = Version::new(0, 0, 0);
+    for name in repo.tag_names(Some("*"))?.iter() {
+        let name = name.unwrap();
+        let number = name.strip_suffix("-release") .unwrap_or("");
+        let version = Some(number).unwrap();
+        if version != "" {
+            let semversion = Version::parse(version);
+            latest = semversion.unwrap().max(latest);
+        }
+    }
+
+    Ok(latest.to_string())
 }
