@@ -169,7 +169,6 @@ pub async fn handleconnection (token: String, window: Window) -> Result<GHUser, 
         let remote_version = Version::parse(remote_tag.unwrap());
         if remote_version.as_ref().unwrap().gt(&localtag(Path::new("F:/UnrealEngine")).unwrap()) {
             window.emit("update", UpdatePayload { version: remote_version.unwrap().to_string()}).unwrap();
-            println!("update available !!");
             Ok(logged_user)
         }
         else {
