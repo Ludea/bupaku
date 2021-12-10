@@ -27,6 +27,11 @@ struct Payload {
   size: usize,
 }
 
+#[derive(Clone, Serialize)]
+struct UpdatePayload {
+  version: String,
+}
+
 #[derive(Serialize, Debug)]
 pub enum AError {
     GHError{ description: String }
@@ -149,7 +154,7 @@ pub fn clone(args: Args, window: Window) {
 }
 
 #[command]
-pub async fn handleconnection (token: String) -> Result<GHUser, AError> {
+pub async fn handleconnection (token: String, window: Window) -> Result<GHUser, AError> {
     let octocrab = Octocrab::builder().personal_token(token).build()?;
 
     let user = ghuser(octocrab.clone());
@@ -162,7 +167,8 @@ pub async fn handleconnection (token: String) -> Result<GHUser, AError> {
         let latest_remote_release = latest_release(octocrab).await.unwrap();
         let remote_tag = latest_remote_release.tag_name.strip_suffix("-release");
         let remote_version = Version::parse(remote_tag.unwrap());
-        if remote_version.unwrap().gt(&localtag(Path::new("F:/UnrealEngine")).unwrap()) {
+        if remote_version.as_ref().unwrap().gt(&localtag(Path::new("F:/UnrealEngine")).unwrap()) {
+            window.emit("update", UpdatePayload { version: remote_version.unwrap().to_string()}).unwrap();
             println!("update available !!");
             Ok(logged_user)
         }

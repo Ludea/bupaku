@@ -9,8 +9,10 @@ import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import GitHubIcon from '@mui/icons-material/GitHub';
+import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
+import Badge from '@mui/material/Badge';
 
 //components
 import Platforms from 'components/Platforms';
@@ -33,7 +35,7 @@ const App = () => {
   const [isBuilding, setIsBuilding] = useState<any>();
   const [isGHConnected, setisGHConnected] = useState<any>();
   const [donwloadDeps, setDonwloadDeps] = useState<any>();
-  const [username, setUsername] = useState<String>("");
+  const [updateAvailable, setUpdateAvailable] = useState<any>("");
   const [avatar, setAvatar] = useState<any>("");
   const stdoutput = useRef<any>();
 
@@ -45,9 +47,14 @@ const App = () => {
   };
 
   useEffect(() => {
-    const unlisten = listen('objects', (event: any) => {
+    listen('objects', (event: any) => {
       stdoutput.current.value = "";
       stdoutput.current.value = "Receiving object : " + event.payload.network_pct + "%" + " (" + event.payload.received_objects + "/" + event.payload.total_objects + "), " + event.payload.size + "KiB" ;
+    })
+
+    listen('update', (event: any) => {
+        setUpdateAvailable(true);
+       console.log(JSON.stringify(event));
     })
 
     getValue("UE4Github").then((value: any) => {
@@ -309,6 +316,24 @@ const App = () => {
           Stop
           </Button>
         )
+      }
+      {
+        updateAvailable ? (
+          <IconButton 
+              color="primary" 
+              aria-label="update" 
+              component="span"
+              sx = {{
+                display: "flex",
+                position: 'absolute',
+                left: 0
+              }}
+              >
+              <Badge badgeContent={1} color="error">
+                <NotificationsNoneIcon />
+              </Badge>
+          </IconButton>
+        ) : null
       }
       </Box>
       </div>
