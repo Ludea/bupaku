@@ -54,7 +54,6 @@ const App = () => {
 
     listen('update', (event: any) => {
         setUpdateAvailable(true);
-       console.log(JSON.stringify(event));
     })
 
     getValue("UE4Github").then((value: any) => {
