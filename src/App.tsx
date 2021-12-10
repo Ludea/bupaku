@@ -1,18 +1,22 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, forwardRef } from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select';
 import FormControl from '@mui/material/FormControl';
+import MuiAlert from '@mui/material/Alert';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
-import GitHubIcon from '@mui/icons-material/GitHub';
-import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
 import Badge from '@mui/material/Badge';
+import Snackbar from '@mui/material/Snackbar';
+
+//Icons
+import GitHubIcon from '@mui/icons-material/GitHub';
+import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 
 //components
 import Platforms from 'components/Platforms';
@@ -23,7 +27,11 @@ import { BuildGraph, SetupDependencies, KillProcess } from 'utils/UE4Commands';
 //API
 import { open } from "@tauri-apps/api/dialog";
 import { invoke } from "@tauri-apps/api/tauri";
-import { listen } from '@tauri-apps/api/event'
+import { listen, emit } from '@tauri-apps/api/event'
+
+const Alert = forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 const App = () => {
   const [UE4Path, setUE4Path] = useState<any>("");
@@ -31,6 +39,7 @@ const App = () => {
   const [openLoginDialog, setOpenLoginDialog] = useState<Boolean>(false);
   const [anchorEl, setAnchorEl] = useState<any>(null);
   const [anchorElMenu, setAnchorElMenu] = useState<any>(null);
+  const [openNotifications, setOpenNotifications] = useState<any>(false);
   const [UE4Version, setUE4Version] = useState<any>(4.27);
   const [isBuilding, setIsBuilding] = useState<any>();
   const [isGHConnected, setisGHConnected] = useState<any>();
@@ -40,7 +49,7 @@ const App = () => {
   const stdoutput = useRef<any>();
 
   const openMenu = Boolean(anchorElMenu);
-
+ 
   let PlatformType: any;
   const Platform = (data: any) => { 
     PlatformType = data.host;
@@ -77,6 +86,25 @@ const App = () => {
     .catch(() => {
     })
   });
+
+  const action = (
+    <div>
+      <Button
+        color="primary"
+        size="small"
+        onClick={() => emit("update", "")}
+        >
+        Yes
+        </Button>
+        <Button
+          color="primary"
+          size="small"
+          onClick={() => setOpenNotifications(false)}
+        >
+        No
+        </Button>
+    </div>
+  )
 
   const handleOpenLoginDialog = (event: any) => {
     setOpenLoginDialog(true);
@@ -318,7 +346,8 @@ const App = () => {
       }
       {
         updateAvailable ? (
-          <IconButton 
+          <div>
+            <IconButton 
               color="primary" 
               aria-label="update" 
               component="span"
@@ -327,11 +356,23 @@ const App = () => {
                 position: 'absolute',
                 left: 0
               }}
-              >
+              onClick={() => setOpenNotifications(true)}
+            >
               <Badge badgeContent={1} color="error">
                 <NotificationsNoneIcon />
               </Badge>
-          </IconButton>
+            </IconButton>
+             <Snackbar
+              open={openNotifications}
+              autoHideDuration={5000}
+              onClose={() => setOpenNotifications(false)}
+              action={action}
+             >
+              { /*<Alert onClose={() => setOpenNotifications(false)} severity="info">
+               4.27.2 is available, do you want to update ?
+               </Alert>*/}
+             </Snackbar>
+          </div>
         ) : null
       }
       </Box>
