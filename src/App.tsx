@@ -9,6 +9,8 @@ import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import GitHubIcon from '@mui/icons-material/GitHub';
+import Avatar from '@mui/material/Avatar';
+import Menu from '@mui/material/Menu';
 
 //components
 import Platforms from 'components/Platforms';
@@ -26,11 +28,16 @@ const App = () => {
   const [UE4Github, setUE4Github] = useState<any>("https://github.com/EpicGames/UnrealEngine");
   const [openLoginDialog, setOpenLoginDialog] = useState<Boolean>(false);
   const [anchorEl, setAnchorEl] = useState<any>(null);
+  const [anchorElMenu, setAnchorElMenu] = useState<any>(null);
   const [UE4Version, setUE4Version] = useState<any>(4.27);
   const [isBuilding, setIsBuilding] = useState<any>();
   const [isGHConnected, setisGHConnected] = useState<any>();
   const [donwloadDeps, setDonwloadDeps] = useState<any>();
+  const [username, setUsername] = useState<String>("");
+  const [avatar, setAvatar] = useState<any>("");
   const stdoutput = useRef<any>();
+
+  const openMenu = Boolean(anchorElMenu);
 
   let PlatformType: any;
   const Platform = (data: any) => { 
@@ -72,6 +79,11 @@ const App = () => {
 
   const CloseLoginDialog = () => {
     setOpenLoginDialog(false);
+  }
+
+  const handleDisconnect = () => {
+    setAnchorElMenu(null);
+    setisGHConnected(false);
   }
 
   const Connected = () => {
@@ -147,24 +159,49 @@ const App = () => {
     <div>
        <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={1}>
-          <IconButton 
-            color="primary" 
-            aria-label="upload picture" 
-            component="span"
-            onClick={handleOpenLoginDialog}
-            sx={{
-              position: 'fixed' ,
-              right: 0
-            }}>
-            <GitHubIcon />
-          </IconButton>
-          <LoginDialog 
-            openDialog={openLoginDialog} 
-            closeDialog={CloseLoginDialog} 
-            anchorEl={anchorEl}
-            isConnected={Connected}
-          >
-          </LoginDialog>
+          {
+            isGHConnected ? (
+              <div>
+                  <Avatar
+                  alt="foo"
+                src={avatar}
+                onClick={(event) => setAnchorElMenu(event.currentTarget)}
+                sx={{ width: 50, height: 50,  position: 'fixed', right: 50, top: 10 }}
+              />
+              <Menu
+        id="demo-positioned-menu"
+        aria-labelledby="demo-positioned-button"
+        anchorEl={anchorElMenu}
+        open={openMenu}
+        onClose={() => setAnchorElMenu(null)}
+      >
+        <MenuItem onClick={handleDisconnect}>Logout</MenuItem>
+        </Menu>
+        </div>
+            ) : (
+              <div>
+              <IconButton 
+                color="primary" 
+                aria-label="upload picture" 
+                component="span"
+                onClick={handleOpenLoginDialog}
+                sx={{
+                position: 'fixed',
+                right: 0
+              }}>
+              <GitHubIcon />
+            </IconButton>
+            <LoginDialog 
+              openDialog={openLoginDialog} 
+              closeDialog={CloseLoginDialog} 
+              anchorEl={anchorEl}
+              isConnected={Connected}
+              avatar_url={(value: any) => setAvatar(value)}
+            >
+            </LoginDialog>
+            </div>
+            )
+          }
           <Grid item>
             <TextField
               id="UE4 git"

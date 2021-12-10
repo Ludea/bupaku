@@ -7,7 +7,8 @@ use git2::build::{CheckoutBuilder, RepoBuilder};
 use git2::{Error, Repository};
 use git2::{FetchOptions, Progress, RemoteCallbacks};
 use std::cell::RefCell;
-use octocrab::Octocrab;
+use octocrab::{Octocrab};
+use octocrab::models::{User, repos::Release};
 use semver::{Version};
 
 #[derive(Deserialize)]
@@ -26,9 +27,15 @@ struct Payload {
   size: usize,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug)]
 pub enum AError {
     GHError{ description: String }
+}
+
+#[derive(Serialize)]
+pub struct GHUser {
+    username: String,
+    avatar_url: String,
 }
 
 impl From<octocrab::Error> for AError {
@@ -142,22 +149,50 @@ pub fn clone(args: Args, window: Window) {
 }
 
 #[command]
-pub async fn getuerepopermission(token: String) -> Result<(), AError> {
-
+pub async fn handleconnection (token: String) -> Result<GHUser, AError> {
     let octocrab = Octocrab::builder().personal_token(token).build()?;
 
-    let repo = octocrab.repos("rust-lang", "rust").get().await?;
-
-    println!(
-        "{} has {} stars",
-        repo.full_name.unwrap(),
-        repo.stargazers_count.unwrap_or(0)
-    );
-
-    Ok(())
+    let user = ghuser(octocrab.clone());
+    if let Ok(value) = user.await {
+        let logged_user = GHUser {
+            username: value.login,
+            avatar_url: value.avatar_url.to_string(),
+        };
+        //TODO: save credentials
+        let latest_remote_release = latest_release(octocrab).await.unwrap();
+        let remote_tag = latest_remote_release.tag_name.strip_suffix("-release");
+        let remote_version = Version::parse(remote_tag.unwrap());
+        if remote_version.unwrap().gt(&localtag(Path::new("F:/UnrealEngine")).unwrap()) {
+            println!("update available !!");
+            Ok(logged_user)
+        }
+        else {
+            let err = AError::GHError {
+                    description: "error".to_string(),
+            };
+            Err(err)
+        }
+        //Ok(logged_user)
+    }
+    else {
+        let err = AError::GHError {
+            description: "error".to_string(),
+        };
+        Err(err)
+    }
 }
 
-fn localtag(path: &Path) -> Result<String, Error> {
+
+pub async fn latest_release(octocrab: Octocrab) -> Result<Release, AError> {
+    let release = octocrab.repos("EpicGames", "UnrealEngine")
+        .releases()
+        .get_latest()
+        .await?;
+
+    Ok(release)
+}
+
+fn localtag(path: &Path) -> Result<Version, Error> {
     let repo = Repository::open(path)?;
 
     let mut latest: Version = Version::new(0, 0, 0);
@@ -171,5 +206,14 @@ fn localtag(path: &Path) -> Result<String, Error> {
         }
     }
 
-    Ok(latest.to_string())
+    Ok(latest)
+}
+
+async fn ghuser(octocrab: Octocrab) -> Result<User, AError> {
+    let user = octocrab
+    .current()
+    .user()
+    .await?;
+
+    Ok(user)
 }

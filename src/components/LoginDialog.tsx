@@ -13,7 +13,7 @@ import { saveValue } from 'utils/Storage';
 //API
 import { invoke } from "@tauri-apps/api/tauri";
 
-const LoginDialog = ({openDialog, closeDialog, isConnected, anchorEl}: any) => {
+const LoginDialog = ({openDialog, closeDialog, isConnected, anchorEl, avatar_url, username}: any) => {
     const [login, setLogin] = useState("");
     const [PAT, setPAT] = useState("");
     const [isLoginEmpty, setIsLoginEmpty] = useState<Boolean>(false);
@@ -39,20 +39,23 @@ const LoginDialog = ({openDialog, closeDialog, isConnected, anchorEl}: any) => {
     };
 
     const handleClose = () => {
-        closeDialog() ;
+
+        //closeDialog() ;
     };
 
     const handleConnection = () => {
-        invoke("getuerepopermission", 
+        invoke("handleconnection", 
         { token: PAT })
         .then((value: any) => {
-            console.log(value);
+            isConnected();
+            closeDialog() ;
+            avatar_url(value.avatar_url);
+            username(value.username);
         })
         .catch((value: any) => {
             console.log(value);
         });
-        isConnected();
-        closeDialog() ;
+
     };
 
     return (
@@ -91,16 +94,16 @@ const LoginDialog = ({openDialog, closeDialog, isConnected, anchorEl}: any) => {
                         fullWidth
                         variant="standard"
                         onChange={event => setPAT(event.target.value)}
-                    /> 
-                    </CardContent>
-                    <CardActions>
-                        <Button variant="contained" onClick={ handleLogin }>
-                        Sign In
-                        </Button>
-                        <Button variant="contained" onClick={ handleClose }>
-                        Cancel
-                        </Button>
-                    </CardActions> 
+                    />
+                </CardContent>
+                <CardActions>
+                    <Button variant="contained" onClick={ handleLogin }>
+                    Sign In
+                    </Button>
+                    <Button variant="contained" onClick={ handleClose }>
+                    Cancel
+                    </Button>
+                </CardActions> 
                 {
                     isLoginEmpty ?
                     <FormLabel component="legend">

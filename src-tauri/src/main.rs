@@ -18,7 +18,7 @@ fn main() {
       cmd::detect_os,
       cmd::get_available_space,
       cmd::clone,
-      cmd::getuerepopermission
+      cmd::handleconnection
     ])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
