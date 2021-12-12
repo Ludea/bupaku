@@ -13,9 +13,9 @@ fn main() {
       window.listen("tauri://update-available".to_string(), move |msg| {
         println!("New version available: {:?}", msg);
         });
-      window.listen("update".to_string(), move |msg|{
-println!("update");
-      });
+        window.listen("update".to_string(), move |msg| {
+          tauri::async_runtime::spawn(cmd::pull());          
+         });
       })
     .invoke_handler(tauri::generate_handler![
       cmd::detect_os,
