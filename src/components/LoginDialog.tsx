@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Card from '@mui/material/Card';
@@ -8,7 +8,7 @@ import Popover from '@mui/material/Popover';
 import FormLabel from '@mui/material/FormLabel';
 
 //components
-import { saveValue } from 'utils/Storage';
+import { saveValue, getValue } from 'utils/Storage';
 
 //API
 import { invoke } from "@tauri-apps/api/tauri";
@@ -22,6 +22,22 @@ const LoginDialog = ({openDialog, closeDialog, isConnected, anchorEl, avatar_url
     const open = Boolean(anchorEl);
     const id = open ? 'simple-popover' : undefined;
 
+    useEffect(() => {
+        getValue("username")
+        .then((username: any) => {
+            if ( username != undefined)  {
+                getValue("pat")
+                .then((pat: any) => {
+                    if ( pat != undefined)  {
+                        isConnected(true);
+                    }
+                })
+                .catch(() => {});
+            }
+          })
+          .catch(() =>{});
+    });
+    
     const handleLogin = () => {
         if (login === "") 
             setIsLoginEmpty(true)
