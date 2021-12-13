@@ -1,7 +1,7 @@
 import { Stronghold, Location } from 'tauri-plugin-stronghold-api' ;
 
-const stronghold = new Stronghold('./bupaku.stronghold', 'password');
-const store = stronghold.getStore('exampleStoreVault', []);
+const stronghold = new Stronghold('./.bupaku', 'password');
+const store = stronghold.getStore('BupakuStore', []);
 let location: Location;
 
 export const saveValue = async (key: any, value: any) => {

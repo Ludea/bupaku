@@ -23,6 +23,7 @@ fn main() {
       cmd::clone,
       cmd::handleconnection
     ])
+    .plugin(TauriStronghold::default())
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
 }

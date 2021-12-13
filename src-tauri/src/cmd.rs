@@ -2,6 +2,7 @@ use serde::{Deserialize, Serialize};
 use tauri::{Window, command};
 use std::env;
 use std::path::{Path, PathBuf};
+use std::{time::Duration};
 use std::io::{self, Write};
 use git2::build::{CheckoutBuilder, RepoBuilder};
 use git2::{Error, Repository};
@@ -10,6 +11,16 @@ use std::cell::RefCell;
 use octocrab::{Octocrab};
 use octocrab::models::{User, repos::Release};
 use semver::{Version};
+use tauri_plugin_stronghold::stronghold;
+use iota_stronghold::{
+    Location, StrongholdFlags };
+
+
+#[derive(Clone)]
+pub struct Vault {
+    name: String,
+    flags: Vec<StrongholdFlags>,
+}
 
 #[derive(Deserialize)]
 pub struct Args {
@@ -352,12 +363,18 @@ Ok(())
 
 #[command]
 pub async fn handleconnection (token: String, window: Window) -> Result<String, AError> {
-    let octocrab = Octocrab::builder().personal_token(token).build()?;
+    let octocrab = Octocrab::builder().personal_token(token.clone()).build()?;
 
     let user = ghuser(octocrab.clone());
     if let Ok(value) = user.await {
         let avatar_url = value.avatar_url.to_string();
-        //TODO: save credentials
+        let snapshot_path: PathBuf = PathBuf::from("./.bupaku");
+        let vault: Vault = Vault {name: "BupakuStore".to_string(), flags: vec![] };
+        let username_location: Location = Location::generic("username", "username");
+        let pat_location: Location = Location::generic("pat", "pat");
+        save_value(snapshot_path.clone(), vault.clone(), username_location, value.login, None).await.unwrap();
+        save_value(snapshot_path, vault, pat_location, token, None).await.unwrap();
+        
         let latest_remote_release = latest_release(octocrab).await.unwrap();
         let remote_tag = latest_remote_release.tag_name.strip_suffix("-release");
         let remote_version = Version::parse(remote_tag.unwrap());
@@ -414,4 +431,17 @@ async fn ghuser(octocrab: Octocrab) -> Result<User, AError> {
     .await?;
 
     Ok(user)
+}
+
+async fn save_value(
+    snapshot_path: PathBuf, 
+    vault: Vault,
+    location: Location, 
+    record: String, 
+    lifetime: Option<Duration>
+  ) -> Result<(), stronghold::Error> {
+        let api = stronghold::Api::new(snapshot_path.clone());
+        let store = api.get_store(vault.name, vault.flags);
+        store.save_record(location.into(), record, lifetime).await?;
+        Ok(())
 }
