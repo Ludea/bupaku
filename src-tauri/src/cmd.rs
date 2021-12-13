@@ -380,15 +380,8 @@ pub async fn handleconnection (token: String, window: Window) -> Result<String, 
         let remote_version = Version::parse(remote_tag.unwrap());
         if remote_version.as_ref().unwrap().gt(&localtag(Path::new("F:/UnrealEngine")).unwrap()) {
             window.emit("update", UpdatePayload { version: remote_version.unwrap().to_string()}).unwrap();
-            Ok(avatar_url)
         }
-        else {
-            let err = AError::GHError {
-                    description: "error".to_string(),
-            };
-            Err(err)
-        }
-        //Ok(avatar_url)
+        Ok(avatar_url)
     }
     else {
         let err = AError::GHError {
@@ -429,7 +422,6 @@ async fn ghuser(octocrab: Octocrab) -> Result<User, AError> {
     .current()
     .user()
     .await?;
-
     Ok(user)
 }
 
