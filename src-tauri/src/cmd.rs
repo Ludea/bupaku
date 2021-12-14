@@ -30,12 +30,13 @@ pub struct Args {
 
 #[derive(Clone, Serialize)]
 struct ObjectPayload {
- // network_pct: usize,
+  network_pct: usize,
   received_objects: usize,
   total_objects: usize,
   indexed_objects: usize,
-  //total_deltas: usize,
- // size: usize,
+  indexed_deltas: usize,
+  total_deltas: usize,
+  size: usize,
 }
 
 #[derive(Clone, Serialize)]
@@ -124,7 +125,7 @@ fn print(state: &mut State) {
 }
 
 #[command]
-pub fn clone(args: Args, window: Window) {
+pub async fn clone(args: Args, window: Window) {
     let state = RefCell::new(State {
         progress: None,
         total: 0,
@@ -133,13 +134,24 @@ pub fn clone(args: Args, window: Window) {
         newline: false,
     });
     let mut cb = RemoteCallbacks::new();
+    cb.credentials(|_, _, _ | {
+        Cred::userpass_plaintext("", "")
+    });
     cb.transfer_progress(|stats| {
         let mut state = state.borrow_mut();
         state.progress = Some(stats.to_owned());
         let progress = state.progress.as_ref().unwrap();
         let network_pct = (100 * progress.received_objects()) / progress.total_objects();
         let kbytes = progress.received_bytes() / 1024;
-        //window.emit("objects", Payload { network_pct: network_pct, received_objects: stats.received_objects(), total_objects: stats.total_objects(), size: kbytes, indexed_deltas: 0, total_deltas: 0 }).unwrap();
+        window.emit("objects", ObjectPayload { 
+            network_pct: network_pct, 
+            received_objects: stats.received_objects(), 
+            total_objects: stats.total_objects(), 
+            indexed_objects: stats.indexed_objects(),
+            size: kbytes, 
+            indexed_deltas: 0, 
+            total_deltas: 0 })
+            .unwrap();
         print(&mut *state);
         true
     });
@@ -390,7 +402,6 @@ pub async fn handleconnection (token: String, window: Window) -> Result<String, 
         Err(err)
     }
 }
-
 
 pub async fn latest_release(octocrab: Octocrab) -> Result<Release, AError> {
     let release = octocrab.repos("EpicGames", "UnrealEngine")
