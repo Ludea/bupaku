@@ -363,15 +363,18 @@ const App = () => {
               </Badge>
             </IconButton>
              <Snackbar
-              open={openNotifications}
-              autoHideDuration={5000}
-              onClose={() => setOpenNotifications(false)}
-              action={action}
-             >
-              { /*<Alert onClose={() => setOpenNotifications(false)} severity="info">
-               4.27.2 is available, do you want to update ?
-               </Alert>*/}
-             </Snackbar>
+                open={openNotifications}
+                autoHideDuration={5000}
+                onClose={() => setOpenNotifications(false)}
+                action={action}
+              >
+                <Alert 
+                  onClose={() => setOpenNotifications(false)} 
+                  severity="info"
+                >
+                4.27.2 is available, do you want to update ?
+                </Alert>
+              </Snackbar>
           </div>
         ) : null
       }
