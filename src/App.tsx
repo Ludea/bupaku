@@ -44,6 +44,7 @@ const App = () => {
   const [isBuilding, setIsBuilding] = useState<any>();
   const [isGHConnected, setisGHConnected] = useState<any>();
   const [donwloadDeps, setDonwloadDeps] = useState<any>();
+  const [isCloning, setIsCloning] = useState<any>();
   const [updateAvailable, setUpdateAvailable] = useState<any>("");
   const [avatar, setAvatar] = useState<any>("");
   const stdoutput = useRef<any>();
@@ -158,13 +159,15 @@ const App = () => {
             setDonwloadDeps(true);
         });
       }
-      if ( arg === "clone")
+      if ( arg === "clone") {
+      setIsCloning(true);
         invoke("clone", { args: {
           arg_url: UE4Github, arg_path: UE4Path}
         })
         .then((value) => {
           stdoutput.current.value = value ;
         })
+      }
   }
 
   const openDialog = () => {
@@ -270,7 +273,9 @@ const App = () => {
             </FormControl>
           </Grid>
         </Grid>
-      </Box>  
+      </Box> 
+      {
+        !isCloning ?
       <Button
         variant="contained"
         color="primary"
@@ -278,6 +283,14 @@ const App = () => {
       >
       Clone
       </Button>
+      :
+      <Button
+       variant="contained"
+       color="primary"
+       onClick={() => setIsCloning(true)}
+      >
+      </Button>
+      }
       {
         !donwloadDeps ? (
           <Button 
