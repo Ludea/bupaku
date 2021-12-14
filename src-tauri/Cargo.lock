@@ -519,7 +519,7 @@ version = "0.1.0"
 dependencies = [
  "fs2",
  "git2",
- "iota-crypto",
+ "iota-crypto 0.9.1",
  "iota_stronghold",
  "octocrab",
  "semver 1.0.4",
@@ -2308,6 +2308,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "iota-crypto"
+version = "0.9.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8c98a3248cde6b42cb479a52089fe4fc20d12de51b8edd923294cd5240ec89b0"
+dependencies = [
+ "pbkdf2",
+]
+
+[[package]]
 name = "iota_stronghold"
 version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2316,7 +2325,7 @@ dependencies = [
  "anyhow",
  "bincode",
  "futures",
- "iota-crypto",
+ "iota-crypto 0.5.1",
  "riker",
  "serde 1.0.131",
  "stronghold-communication",
@@ -4872,7 +4881,7 @@ dependencies = [
  "anyhow",
  "dirs-next",
  "hex",
- "iota-crypto",
+ "iota-crypto 0.5.1",
  "once_cell",
  "paste",
  "serde 1.0.131",
@@ -5192,7 +5201,7 @@ source = "git+https://github.com/tauri-apps/tauri-plugin-stronghold?branch=main#
 dependencies = [
  "async-std",
  "hex",
- "iota-crypto",
+ "iota-crypto 0.5.1",
  "iota_stronghold",
  "once_cell",
  "riker",
