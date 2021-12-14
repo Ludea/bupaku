@@ -75,7 +75,7 @@ const App = () => {
 
     getValue("UE4Github").then((value: any) => {
       if ( value != undefined)  {
-        setUE4Github(value);g
+        setUE4Github(value);
       }
     })
     .catch(() =>{});
