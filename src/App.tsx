@@ -44,7 +44,7 @@ const App = () => {
   const [isBuilding, setIsBuilding] = useState<any>();
   const [isGHConnected, setisGHConnected] = useState<any>();
   const [donwloadDeps, setDonwloadDeps] = useState<any>();
-  const [isCloning, setIsCloning] = useState<any>();
+  const [isCloning, setIsCloning] = useState<any>(false);
   const [updateAvailable, setUpdateAvailable] = useState<any>("");
   const [avatar, setAvatar] = useState<any>("");
   const stdoutput = useRef<any>();
@@ -58,8 +58,15 @@ const App = () => {
 
   useEffect(() => {
     listen('objects', (event: any) => {
+      let size = String(event.payload.size)  + "kiB";
+      if (event.payload.size > 1024) {
+        size = (event.payload.size / 1024).toString() + "MiB";
+      }
+      if (event.payload.size > 1024 * 1024) {
+        size = (event.payload.size / (1024*1024)).toString() + "GiB";
+      }
       stdoutput.current.value = "";
-      stdoutput.current.value = "Receiving object : " + event.payload.network_pct + "%" + " (" + event.payload.received_objects + "/" + event.payload.total_objects + "), " + event.payload.size + "KiB" ;
+      stdoutput.current.value = "Receiving object : " + event.payload.network_pct + "%" + " (" + event.payload.received_objects + "/" + event.payload.total_objects + "), " + size ;
     })
 
     listen('update', (event: any) => {
@@ -68,7 +75,7 @@ const App = () => {
 
     getValue("UE4Github").then((value: any) => {
       if ( value != undefined)  {
-        setUE4Github(value);
+        setUE4Github(value);g
       }
     })
     .catch(() =>{});
@@ -289,6 +296,7 @@ const App = () => {
        color="primary"
        onClick={() => setIsCloning(true)}
       >
+      Stop
       </Button>
       }
       {
