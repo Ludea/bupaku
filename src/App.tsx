@@ -286,7 +286,7 @@ const App = () => {
       <Button
         variant="contained"
         color="primary"
-        //disable={isGHConnected}
+        disabled={ donwloadDeps || isCloning || isGHConnected }
         onClick={() => RunCommand("clone")}
       >
       Clone
@@ -305,6 +305,7 @@ const App = () => {
           <Button 
             variant="contained" 
             color="primary"
+            disabled={ isCloning || isBuilding }
             onClick={() => RunCommand("Setup")}
           >
           Setup Dependencies
@@ -347,7 +348,7 @@ const App = () => {
           <Button 
             variant="contained" 
             color="primary" 
-            disabled={donwloadDeps}
+            disabled={ donwloadDeps || isCloning }
             onClick={() => {
               RunCommand("BuildGraph")
               }
