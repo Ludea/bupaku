@@ -58,12 +58,12 @@ const App = () => {
 
   useEffect(() => {
     listen('objects', (event: any) => {
-      let size = String(event.payload.size)  + "kiB";
+      let size = String(Math.floor(event.payload.size * 100) / 100)  + "kiB";
       if (event.payload.size > 1024) {
-        size = (event.payload.size / 1024).toString() + "MiB";
+        size = (Math.floor(event.payload.size * 100) / 100 / 1024).toString() + "MiB";
       }
       if (event.payload.size > 1024 * 1024) {
-        size = (event.payload.size / (1024*1024)).toString() + "GiB";
+        size = (Math.floor(event.payload.size * 100) / 100 / (1024*1024)).toString() + "GiB";
       }
       stdoutput.current.value = "";
       stdoutput.current.value = "Receiving object : " + event.payload.network_pct + "%" + " (" + event.payload.received_objects + "/" + event.payload.total_objects + "), " + size ;
@@ -286,6 +286,7 @@ const App = () => {
       <Button
         variant="contained"
         color="primary"
+        //disable={isGHConnected}
         onClick={() => RunCommand("clone")}
       >
       Clone
