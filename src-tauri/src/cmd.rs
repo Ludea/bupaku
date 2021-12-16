@@ -77,7 +77,6 @@ struct State {
     total: usize,
     current: usize,
     path: Option<PathBuf>,
-    newline: bool,
 }
 
 #[command]
