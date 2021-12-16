@@ -49,6 +49,11 @@ pub enum AError {
     GHError{ description: String }
 }
 
+#[derive(Serialize, Debug)]
+pub enum Giterror {
+    Giterror{ description: String }
+}
+
 #[derive(Serialize)]
 pub struct GHUser {
     username: String,
@@ -58,6 +63,12 @@ pub struct GHUser {
 impl From<octocrab::Error> for AError {
     fn from(error: octocrab::Error) -> Self {
         Self::GHError { description: error.to_string() }
+    }
+}
+
+impl From<git2::Error> for Giterror {
+    fn from(error: git2::Error) -> Self {
+        Self::Giterror { description: error.to_string() }
     }
 }
 
@@ -125,7 +136,7 @@ fn print(state: &mut State) {
 }
 
 #[command]
-pub async fn clone(args: Args, window: Window) {
+pub async fn clone(args: Args, window: Window) -> Result<(), Giterror> {
     let state = RefCell::new(State {
         progress: None,
         total: 0,
@@ -152,7 +163,6 @@ pub async fn clone(args: Args, window: Window) {
             indexed_deltas: 0, 
             total_deltas: 0 })
             .unwrap();
-        print(&mut *state);
         true
     });
 
@@ -162,6 +172,16 @@ pub async fn clone(args: Args, window: Window) {
         state.path = path.map(|p| p.to_path_buf());
         state.current = cur;
         state.total = total;
+        let progress = state.progress.as_ref().unwrap();
+        window.emit("deltas", ObjectPayload{
+            network_pct: 0,
+            received_objects: 0,
+            total_objects: 0,
+            indexed_objects: 0,
+            size: 0,
+            indexed_deltas: progress.indexed_deltas(),
+            total_deltas: progress.total_deltas(),
+        }).unwrap();
         print(&mut *state);
     });
 
@@ -170,10 +190,10 @@ pub async fn clone(args: Args, window: Window) {
     RepoBuilder::new()
         .fetch_options(fo)
         .with_checkout(co)
-        .clone(&args.arg_url, Path::new(&args.arg_path));
+        .clone(&args.arg_url, Path::new(&args.arg_path))?;
     println!();
 
-   // Ok(())
+    Ok(())
 }
 
 fn do_fetch<'a>(
