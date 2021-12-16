@@ -97,7 +97,6 @@ pub async fn clone(args: Args, window: Window) -> Result<(), Giterror> {
         total: 0,
         current: 0,
         path: None,
-        newline: false,
     });
     let mut cb = RemoteCallbacks::new();
     cb.credentials(|_, _, _ | {
