@@ -26,6 +26,7 @@ pub struct Vault {
 pub struct Args {
     arg_url: String,
     arg_path: String,
+    arg_tag: String,
 }
 
 #[derive(Clone, Serialize)]
@@ -140,12 +141,24 @@ pub async fn clone(args: Args, window: Window) -> Result<(), Giterror> {
 
     let mut fo = FetchOptions::new();
     fo.remote_callbacks(cb);
-    RepoBuilder::new()
+    let local_repo = RepoBuilder::new()
         .fetch_options(fo)
         .with_checkout(co)
         .clone(&args.arg_url, Path::new(&args.arg_path))?;
-    println!();
 
+    checkout(local_repo, &args.arg_tag)?;
+
+    Ok(())
+}
+
+fn checkout (repo: Repository, refname: &str) -> Result<(), git2::Error> {
+    let (object, reference) = repo.revparse_ext(refname)?;
+    repo.checkout_tree(&object, None)?;
+
+    match reference {
+        Some(gref) => repo.set_head(gref.name().unwrap())?,
+        None => repo.set_head_detached(object.id())?
+    }
     Ok(())
 }
 
