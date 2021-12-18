@@ -1,4 +1,4 @@
-import { Stronghold, Location } from 'tauri-plugin-stronghold-api' ;
+import { Stronghold, Location } from 'tauri-plugin-stronghold-api/webview-dist' ;
 
 const stronghold = new Stronghold('./.bupaku', 'password');
 const store = stronghold.getStore('BupakuStore', []);
@@ -17,7 +17,7 @@ export const getValue = (key: string) => new Promise((resolve, reject) => {
 		.catch((value: any) => reject(value))
 });
 
-export const Delete = (key: string) => new Promise((resolve, reject) => {
+export const deleteValue = (key: string) => new Promise((resolve, reject) => {
     location = Location.generic(key, key);
     store.remove(location)
     .then((value: any) => resolve(value))
