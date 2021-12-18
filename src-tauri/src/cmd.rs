@@ -45,6 +45,11 @@ struct UpdatePayload {
   version: String,
 }
 
+#[derive(Clone, Serialize)]
+struct ClonePayload {
+  isfinished: bool,
+}
+
 #[derive(Serialize, Debug)]
 pub enum AError {
     GHError{ description: String }
@@ -147,7 +152,7 @@ pub async fn clone(args: Args, window: Window) -> Result<(), Giterror> {
         .clone(&args.arg_url, Path::new(&args.arg_path))?;
 
     checkout(local_repo, &args.arg_tag)?;
-
+    window.emit("finish", ClonePayload{isfinished: true}).unwrap();
     Ok(())
 }
 
@@ -159,6 +164,7 @@ fn checkout (repo: Repository, refname: &str) -> Result<(), git2::Error> {
         Some(gref) => repo.set_head(gref.name().unwrap())?,
         None => repo.set_head_detached(object.id())?
     }
+
     Ok(())
 }
 

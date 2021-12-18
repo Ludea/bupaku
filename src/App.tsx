@@ -50,7 +50,7 @@ const App = () => {
   const stdoutput = useRef<any>();
 
   const openMenu = Boolean(anchorElMenu);
- 
+
   let PlatformType: any;
   const Platform = (data: any) => { 
     PlatformType = data.host;
@@ -65,12 +65,20 @@ const App = () => {
       if (event.payload.size > 1024 * 1024) {
         size = (Math.floor(event.payload.size * 100) / 100 / (1024*1024)).toString() + "GiB";
       }
-      stdoutput.current.value = "";
-      stdoutput.current.value = "Receiving object : " + event.payload.network_pct + "%" + " (" + event.payload.received_objects + "/" + event.payload.total_objects + "), " + size ;
+      //stdoutput.current.value += "\n";
+      stdoutput.current.value = "Receiving objects : " + event.payload.network_pct + "%" + " (" + event.payload.received_objects + "/" + event.payload.total_objects + "), " + size ;
     })
+
+    listen('deltas', (event: any) => {
+      stdoutput.current.value = "Resolving deltas : " + "(" + event.payload.indexed_deltas + "/" + event.payload.total_deltas + ")"; 
+    });
 
     listen('update', (event: any) => {
         setUpdateAvailable(true);
+    })
+
+    listen('finish', () => {
+        setIsCloning(false);
     })
 
     getValue("UE4Github").then((value: any) => {
@@ -133,7 +141,7 @@ const App = () => {
   }
 
   const RunCommand = (arg: any) => {
-    stdoutput.current.value = "";
+    //stdoutput.current.value = "";
     if (arg === "BuildGraph") {
       if (UE4Path === undefined) {
         stdoutput.current.value = "Please set UE4 directory";
@@ -167,9 +175,10 @@ const App = () => {
         });
       }
       if ( arg === "clone") {
+        stdoutput.current.value = "Cloning UnrealEngine";
       setIsCloning(true);
         invoke("clone", { args: {
-          arg_url: UE4Github, arg_path: UE4Path}
+          arg_url: UE4Github, arg_path: UE4Path, arg_tag: UE4Version}
         })
         .then((value) => {
           stdoutput.current.value = value ;
@@ -252,7 +261,7 @@ const App = () => {
               label="UE4 Github"
               value={UE4Github}
               inputProps={{ 'aria-label': 'bare' }}
-              onClick={openDialog}
+           //   onClick={openDialog}
             />
           </Grid>
           <Grid item>
