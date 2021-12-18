@@ -13,7 +13,7 @@ fn main() {
       window.listen("tauri://update-available".to_string(), move |msg| {
         println!("New version available: {:?}", msg);
         });
-        window.listen("update".to_string(), move |msg| {
+        window.listen("update".to_string(), move |_| {
           tauri::async_runtime::spawn(cmd::pull());          
          });
       })
