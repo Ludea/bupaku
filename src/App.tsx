@@ -295,7 +295,7 @@ const App = () => {
       <Button
         variant="contained"
         color="primary"
-        disabled={ donwloadDeps || isCloning || isGHConnected }
+        disabled={ donwloadDeps || isCloning || !isGHConnected }
         onClick={() => RunCommand("clone")}
       >
       Clone
