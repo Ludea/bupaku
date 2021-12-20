@@ -78,13 +78,6 @@ impl From<git2::Error> for Giterror {
     }
 }
 
-struct State {
-    progress: Option<Progress<'static>>,
-    total: usize,
-    current: usize,
-    path: Option<PathBuf>,
-}
-
 #[command]
 pub fn detect_os() -> &'static str {
     return env::consts::OS ;
@@ -98,28 +91,27 @@ pub fn get_available_space(path: String) -> Result<u64, std::string::String>  {
 
 #[command]
 pub async fn clone(args: Args, window: Window) -> Result<(), Giterror> {
-    let state = RefCell::new(State {
-        progress: None,
-        total: 0,
-        current: 0,
-        path: None,
-    });
+
+    let snapshot_path = PathBuf::from("./.bupaku");
+    let vault: Vault = Vault{name: "BupakuStore".to_string(), flags: vec![] };
+    let username_location: Location = Location::generic("username", "username");
+    let pat_location: Location = Location::generic("pat", "pat");
+
+    let username = get_value(snapshot_path.clone(), vault.clone(), username_location).await.unwrap();
+    let pat = get_value(snapshot_path.clone(), vault.clone(), pat_location).await.unwrap();
+    
     let mut cb = RemoteCallbacks::new();
-    cb.credentials(|_, _, _ | {
-        Cred::userpass_plaintext("", "")
+    cb.credentials(|_, _, _| {
+        Cred::userpass_plaintext(&username, &pat)
     });
+
     cb.transfer_progress(|stats| {
-        let mut state = state.borrow_mut();
-        state.progress = Some(stats.to_owned());
-        let progress = state.progress.as_ref().unwrap();
-        let network_pct = (100 * progress.received_objects()) / progress.total_objects();
-        let kbytes = progress.received_bytes() / 1024;
         window.emit("objects", ObjectPayload { 
-            network_pct: network_pct, 
+            network_pct: (100 * stats.received_objects()) / stats.total_objects(), 
             received_objects: stats.received_objects(), 
             total_objects: stats.total_objects(), 
             indexed_objects: stats.indexed_objects(),
-            size: kbytes, 
+            size: stats.received_bytes() / 1024, 
             indexed_deltas: 0, 
             total_deltas: 0 })
             .unwrap();
@@ -127,20 +119,15 @@ pub async fn clone(args: Args, window: Window) -> Result<(), Giterror> {
     });
 
     let mut co = CheckoutBuilder::new();
-    co.progress(|path, cur, total| {
-        let mut state = state.borrow_mut();
-        state.path = path.map(|p| p.to_path_buf());
-        state.current = cur;
-        state.total = total;
-        let progress = state.progress.as_ref().unwrap();
+    co.progress(|_, current, total| {
         window.emit("deltas", ObjectPayload{
             network_pct: 0,
             received_objects: 0,
             total_objects: 0,
             indexed_objects: 0,
             size: 0,
-            indexed_deltas: progress.indexed_deltas(),
-            total_deltas: progress.total_deltas(),
+            indexed_deltas: current,
+            total_deltas: total,
         }).unwrap();
     });
 
@@ -200,10 +187,6 @@ fn do_fetch<'a>(
         io::stdout().flush().unwrap();
         true
     });
-
-    cb.credentials(|_, _, _| {
-        Cred::userpass_plaintext("", "")
-      });
 
     let mut fo = git2::FetchOptions::new();
     fo.remote_callbacks(cb);
@@ -376,7 +359,10 @@ pub async fn handleconnection (token: String, window: Window) -> Result<String, 
         let vault: Vault = Vault {name: "BupakuStore".to_string(), flags: vec![] };
         let username_location: Location = Location::generic("username", "username");
         let pat_location: Location = Location::generic("pat", "pat");
-        save_value(snapshot_path.clone(), vault.clone(), username_location, value.login, None).await.unwrap();
+        match save_value(snapshot_path.clone(), vault.clone(), username_location, value.login, None).await {
+            Ok(value) => println!("{:?}", value),
+            Err(value) => println!("{:}", value)
+        }
         save_value(snapshot_path, vault, pat_location, token, None).await.unwrap();
         
         let latest_remote_release = latest_release(octocrab).await.unwrap();
@@ -434,9 +420,21 @@ async fn save_value(
     location: Location, 
     record: String, 
     lifetime: Option<Duration>
-  ) -> Result<(), stronghold::Error> {
+  ) -> Result<(), tauri_plugin_stronghold::stronghold::Error> {
         let api = stronghold::Api::new(snapshot_path.clone());
         let store = api.get_store(vault.name, vault.flags);
         store.save_record(location.into(), record, lifetime).await?;
         Ok(())
 }
+
+pub async fn get_value(
+    snapshot_path: PathBuf,
+    vault: Vault,
+    location: Location,
+  ) -> Result<String, tauri_plugin_stronghold::stronghold::Error> {
+        let api = stronghold::Api::new(&snapshot_path);
+        let store: stronghold::Store = api.get_store(vault.name, vault.flags);
+        let record = store.get_record(location.into()).await?;
+        Ok(record)
+}
+
