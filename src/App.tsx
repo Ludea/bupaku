@@ -20,7 +20,7 @@ import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 
 //components
 import Platforms from 'components/Platforms';
-import { getValue, saveValue } from 'utils/Storage';
+import { getValue, saveValue, deleteValue } from 'utils/Storage';
 import LoginDialog from 'components/LoginDialog';
 import { BuildGraph, SetupDependencies, KillProcess } from 'utils/UE4Commands';
 
@@ -134,6 +134,8 @@ const App = () => {
   const handleDisconnect = () => {
     setAnchorElMenu(null);
     setisGHConnected(false);
+    deleteValue("username")
+    deleteValue("pat");
   }
 
   const Connected = () => {
@@ -398,12 +400,26 @@ const App = () => {
                 open={openNotifications}
                 autoHideDuration={5000}
                 onClose={() => setOpenNotifications(false)}
-                action={action}
+                //action={action}
               >
                 <Alert 
-                  onClose={() => setOpenNotifications(false)} 
+                  //onClose={() => setOpenNotifications(false)} 
                   severity="info"
                 >
+                   <Button
+        color="primary"
+        size="small"
+        onClick={() => emit("update", "")}
+        >
+        Yes
+        </Button>
+        <Button
+          color="primary"
+          size="small"
+          onClick={() => setOpenNotifications(false)}
+        >
+        No
+        </Button>
                 4.27.2 is available, do you want to update ?
                 </Alert>
               </Snackbar>
