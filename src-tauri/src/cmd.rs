@@ -359,10 +359,7 @@ pub async fn handleconnection (token: String, window: Window) -> Result<String, 
         let vault: Vault = Vault {name: "BupakuStore".to_string(), flags: vec![] };
         let username_location: Location = Location::generic("username", "username");
         let pat_location: Location = Location::generic("pat", "pat");
-        match save_value(snapshot_path.clone(), vault.clone(), username_location, value.login, None).await {
-            Ok(value) => println!("{:?}", value),
-            Err(value) => println!("{:}", value)
-        }
+        save_value(snapshot_path.clone(), vault.clone(), username_location, value.login, None).await.unwrap();
         save_value(snapshot_path, vault, pat_location, token, None).await.unwrap();
         
         let latest_remote_release = latest_release(octocrab).await.unwrap();
@@ -391,19 +388,11 @@ pub async fn latest_release(octocrab: Octocrab) -> Result<Release, AError> {
 
 fn localtag(path: &Path) -> Result<Version, Error> {
     let repo = Repository::open(path)?;
-
-    let mut latest: Version = Version::new(0, 0, 0);
-    for name in repo.tag_names(Some("*"))?.iter() {
-        let name = name.unwrap();
-        let number = name.strip_suffix("-release") .unwrap_or("");
-        let version = Some(number).unwrap();
-        if version != "" {
-            let semversion = Version::parse(version);
-            latest = semversion.unwrap().max(latest);
-        }
-    }
-
-    Ok(latest)
+    let local_tag = repo.describe(&git2::DescribeOptions::new()).unwrap();
+    let describe = local_tag.format(Some(&git2::DescribeFormatOptions::new())).unwrap();
+    let version_as_string = describe.strip_suffix("-release");
+    let semver = Version::parse(version_as_string.unwrap());
+    Ok(semver.unwrap())
 }
 
 async fn ghuser(octocrab: Octocrab) -> Result<User, AError> {
