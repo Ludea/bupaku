@@ -1,11 +1,10 @@
-import { useState, useRef, useEffect, forwardRef } from 'react';
+import React, { useState, useRef, useEffect, forwardRef, SyntheticEvent } from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select';
 import FormControl from '@mui/material/FormControl';
-import MuiAlert from '@mui/material/Alert';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
@@ -13,6 +12,7 @@ import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
 import Badge from '@mui/material/Badge';
 import Snackbar from '@mui/material/Snackbar';
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
 
 //Icons
 import GitHubIcon from '@mui/icons-material/GitHub';
@@ -29,7 +29,7 @@ import { open } from "@tauri-apps/api/dialog";
 import { invoke } from "@tauri-apps/api/tauri";
 import { listen, emit } from '@tauri-apps/api/event'
 
-const Alert = forwardRef(function Alert(props, ref) {
+const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
@@ -44,6 +44,7 @@ const App = () => {
   const [isBuilding, setIsBuilding] = useState<any>();
   const [isGHConnected, setisGHConnected] = useState<any>();
   const [donwloadDeps, setDonwloadDeps] = useState<any>();
+  const [latestTag, setLatestTag] =  useState<any>();
   const [isCloning, setIsCloning] = useState<any>(false);
   const [updateAvailable, setUpdateAvailable] = useState<any>("");
   const [avatar, setAvatar] = useState<any>("");
@@ -74,6 +75,7 @@ const App = () => {
     });
 
     listen('update', (event: any) => {
+        setLatestTag(event.payload.version)
         setUpdateAvailable(true);
     })
 
@@ -103,24 +105,12 @@ const App = () => {
     })
   });
 
-  const action = (
-    <div>
-      <Button
-        color="primary"
-        size="small"
-        onClick={() => emit("update", "")}
-        >
-        Yes
-        </Button>
-        <Button
-          color="primary"
-          size="small"
-          onClick={() => setOpenNotifications(false)}
-        >
-        No
-        </Button>
-    </div>
-  )
+  const closeSnackbar = (event?: SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenNotifications(false);
+  };
 
   const handleOpenLoginDialog = (event: any) => {
     setOpenLoginDialog(true);
@@ -400,29 +390,29 @@ const App = () => {
                 open={openNotifications}
                 autoHideDuration={5000}
                 onClose={() => setOpenNotifications(false)}
-                //action={action}
               >
-                <Alert 
-                  //onClose={() => setOpenNotifications(false)} 
+                <Alert
+                  onClose={closeSnackbar}
                   severity="info"
-                >
-                   <Button
-        color="primary"
-        size="small"
-        onClick={() => emit("update", "")}
-        >
-        Yes
-        </Button>
-        <Button
-          color="primary"
-          size="small"
-          onClick={() => setOpenNotifications(false)}
-        >
-        No
-        </Button>
-                4.27.2 is available, do you want to update ?
-                </Alert>
+                  >
+                  {latestTag} is available, do you want to update ?
+                  <Button
+                   color="secondary"
+                   size="small"
+                   onClick={() => {emit("update", "")}}
+                   >
+                  Yes
+                   </Button>
+                   <Button 
+                     color="secondary"
+                     size="small"
+                     onClick={closeSnackbar}
+                   >
+                  No
+                  </Button>
+                  </Alert>
               </Snackbar>
+
           </div>
         ) : null
       }
