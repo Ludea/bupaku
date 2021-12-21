@@ -55,8 +55,7 @@ const LoginDialog = ({openDialog, closeDialog, isConnected, anchorEl, avatar_url
     };
 
     const handleClose = () => {
-
-        //closeDialog() ;
+        closeDialog() ;
     };
 
     const handleConnection = () => {
