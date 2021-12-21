@@ -7,7 +7,6 @@ use std::io::{self, Write};
 use git2::build::{CheckoutBuilder, RepoBuilder};
 use git2::{Error, Repository};
 use git2::{FetchOptions, Progress, RemoteCallbacks, Cred};
-use std::cell::RefCell;
 use octocrab::{Octocrab};
 use octocrab::models::{User, repos::Release};
 use semver::{Version};
