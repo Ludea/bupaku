@@ -157,9 +157,15 @@ fn do_fetch<'a> (
     repo: &'a git2::Repository,
     refs: &[&str],
     remote: &'a mut git2::Remote,
-    window: Window
+    window: Window,
+    username: String,
+    pat: String
 ) -> Result<git2::AnnotatedCommit<'a>, git2::Error> {
     let mut cb = git2::RemoteCallbacks::new();
+
+    cb.credentials(|_, _, _| {
+        Cred::userpass_plaintext(&username, &pat)
+    });
 
     // Print out our transfer progress.
     cb.transfer_progress(|stats| {
@@ -284,7 +290,7 @@ fn do_merge<'a>(
     repo: &'a Repository,
     remote_branch: &str,
     fetch_commit: git2::AnnotatedCommit<'a>,
-) -> Result<(), git2::Error> {
+) -> Result<(), Giterror> {
     // 1. do a merge analysis
     let analysis = repo.merge_analysis(&[&fetch_commit])?;
 
@@ -329,23 +335,20 @@ fn do_merge<'a>(
 #[command]
 pub async fn pull(window: Window) -> Result<(), Giterror> {
     let repo: Repository = Repository::open(Path::new("F:/UnrealEngine")).unwrap();
-    let refs = "";
-    let mut remote = repo.find_remote("origin")?;
-    if git2connection().is_ok() {
-    let fetch_commit = do_fetch(&repo, &[refs], &mut remote, window)?;
-   // do_merge(&repo, &refs, fetch_commit)
-    }
-    Ok(())
-}
+    let refs = "4.27.2-release";
+   
+    let snapshot_path = PathBuf::from("./.bupaku");
+    let vault: Vault = Vault{name: "BupakuStore".to_string(), flags: vec![]};
+    let username_location: Location = Location::generic("username", "username");
+    let pat_location: Location = Location::generic("pat", "pat");
 
-fn git2connection() -> Result<(), git2::Error> {
-    let mut callbacks = RemoteCallbacks::new();
-callbacks.credentials(|_, _, _| {
-  Cred::userpass_plaintext("", "")
-});
-let repo = Repository::open(Path::new("F:/UnrealEngine")).unwrap();
- let mut remote = repo.find_remote("origin")?;
-Ok(())
+    let username = get_value(snapshot_path.clone(), vault.clone(), username_location).await.unwrap();
+    let pat = get_value(snapshot_path.clone(), vault.clone(), pat_location).await.unwrap();
+
+    let mut remote = repo.find_remote("origin").unwrap();
+    
+    let fetch_commit = do_fetch(&repo, &[refs], &mut remote, window, username, pat)?;
+    do_merge(&repo, &refs, fetch_commit)
 }
 
 #[command]
