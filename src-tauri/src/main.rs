@@ -4,20 +4,21 @@
 )]
 
 use tauri_plugin_stronghold::TauriStronghold;
+use tauri::{Manager};
 mod cmd;
 
 fn main() {
   tauri::Builder::default()
     .plugin(TauriStronghold::default())
-    .on_page_load(|window, _payload| {
-      window.listen("tauri://update-available".to_string(), move |msg| {
+    .setup(|app| {
+      let main_window = app.get_window("main").unwrap();       
+      main_window.listen("tauri://update-available".to_string(), move |msg| {
         println!("New version available: {:?}", msg);
         });
-        window.listen("update".to_string(), move |_| {
-          tauri::async_runtime::spawn(cmd::pull());          
-         });
-      })
+      Ok(())
+    })
     .invoke_handler(tauri::generate_handler![
+      cmd::pull,
       cmd::detect_os,
       cmd::get_available_space,
       cmd::clone,

@@ -74,6 +74,10 @@ const App = () => {
       stdoutput.current.value = "Resolving deltas : " + "(" + event.payload.indexed_deltas + "/" + event.payload.total_deltas + ")"; 
     });
 
+    listen('deltas_fetch', (event: any) => {
+      stdoutput.current.value = "Resolving deltas : " + "(" + event.payload.indexed_deltas + "/" + event.payload.total_deltas + ")"; 
+    });
+
     listen('update', (event: any) => {
         setLatestTag(event.payload.version)
         setUpdateAvailable(true);
@@ -399,7 +403,7 @@ const App = () => {
                   <Button
                    color="secondary"
                    size="small"
-                   onClick={() => {emit("update", "")}}
+                   onClick={() => {invoke("pull")}}
                    >
                   Yes
                    </Button>

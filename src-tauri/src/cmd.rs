@@ -3,7 +3,6 @@ use tauri::{Window, command};
 use std::env;
 use std::path::{Path, PathBuf};
 use std::{time::Duration};
-use std::io::{self, Write};
 use git2::build::{CheckoutBuilder, RepoBuilder};
 use git2::{Error, Repository};
 use git2::{FetchOptions, Progress, RemoteCallbacks, Cred};
@@ -154,36 +153,37 @@ fn checkout (repo: Repository, refname: &str) -> Result<(), git2::Error> {
     Ok(())
 }
 
-fn do_fetch<'a>(
+fn do_fetch<'a> (
     repo: &'a git2::Repository,
     refs: &[&str],
     remote: &'a mut git2::Remote,
+    window: Window
 ) -> Result<git2::AnnotatedCommit<'a>, git2::Error> {
     let mut cb = git2::RemoteCallbacks::new();
 
     // Print out our transfer progress.
     cb.transfer_progress(|stats| {
         if stats.received_objects() == stats.total_objects() {
-            print!(
-                "Resolving deltas {}/{}\r",
-                stats.indexed_deltas(),
-                stats.total_deltas()
-            );
+            window.emit("deltas_fetch", ObjectPayload {
+                network_pct: 0,
+                received_objects: 0,
+                total_objects: 0,
+                indexed_objects: 0,
+                indexed_deltas: stats.indexed_deltas(),
+                total_deltas: stats.total_deltas(),
+                size: 0,
+            }).unwrap();
         } else if stats.total_objects() > 0 {
-            /*window.emit("object", ObjectPayload { 
+            window.emit("object_fetch", ObjectPayload { 
+                network_pct: 0,
                 received_objects: stats.received_objects(), 
                 total_objects: stats.total_objects(), 
-                indexed_objects: stats.indexed_objects()
-            });*/
-            print!(
-                "Received {}/{} objects ({}) in {} bytes\r",
-                stats.received_objects(),
-                stats.total_objects(),
-                stats.indexed_objects(),
-                stats.received_bytes()
-            );
+                indexed_objects: stats.indexed_objects(),
+                indexed_deltas: 0,
+                total_deltas: 0,
+                size: stats.received_bytes()
+            }).unwrap();
         }
-        io::stdout().flush().unwrap();
         true
     });
 
@@ -326,12 +326,13 @@ fn do_merge<'a>(
     Ok(())
 }
 
-pub async fn pull () -> Result<(), git2::Error> {
-    let repo = Repository::open(Path::new("F:/UnrealEngine")).unwrap();
-   let refs = "release";
+#[command]
+pub async fn pull(window: Window) -> Result<(), Giterror> {
+    let repo: Repository = Repository::open(Path::new("F:/UnrealEngine")).unwrap();
+    let refs = "";
     let mut remote = repo.find_remote("origin")?;
     if git2connection().is_ok() {
-    let fetch_commit = do_fetch(&repo, &[refs], &mut remote)?;
+    let fetch_commit = do_fetch(&repo, &[refs], &mut remote, window)?;
    // do_merge(&repo, &refs, fetch_commit)
     }
     Ok(())
