@@ -12,6 +12,7 @@ import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
 import Badge from '@mui/material/Badge';
 import Snackbar from '@mui/material/Snackbar';
+import FormLabel  from '@mui/material/FormLabel';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 
 //Icons
@@ -27,7 +28,8 @@ import { BuildGraph, SetupDependencies, KillProcess } from 'utils/UE4Commands';
 //API
 import { open } from "@tauri-apps/api/dialog";
 import { invoke } from "@tauri-apps/api/tauri";
-import { listen, emit } from '@tauri-apps/api/event'
+import { listen, emit } from '@tauri-apps/api/event';
+import { relaunch } from '@tauri-apps/api/process';
 
 const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -46,7 +48,9 @@ const App = () => {
   const [donwloadDeps, setDonwloadDeps] = useState<any>();
   const [latestTag, setLatestTag] =  useState<any>();
   const [isCloning, setIsCloning] = useState<any>(false);
-  const [updateAvailable, setUpdateAvailable] = useState<any>("");
+  const [updateAvailableUE, setUpdateAvailableUE] = useState<Boolean>(false);
+  const [updateAvailableBpk, setUpdateAvailableBpk] = useState<Boolean>(false);
+  const [finishedupdateBpk, setFinishedUpdateBpk] = useState<Boolean>(false);
   const [avatar, setAvatar] = useState<any>("");
   const stdoutput = useRef<any>();
 
@@ -78,9 +82,24 @@ const App = () => {
       stdoutput.current.value = "Resolving deltas : " + "(" + event.payload.indexed_deltas + "/" + event.payload.total_deltas + ")"; 
     });
 
-    listen('update', (event: any) => {
+    listen('unrealengine://update-available', (event: any) => {
         setLatestTag(event.payload.version)
-        setUpdateAvailable(true);
+        setUpdateAvailableUE(true);
+    })
+
+    listen('tauri://update-available', (event: any) => {
+      setUpdateAvailableBpk(true);
+    })
+
+    listen('tauri://update-status', (status: any) => {
+       switch (status) {
+          case "DONE": setFinishedUpdateBpk(true);
+          break;
+          case "ERROR": alert("error");
+          break;
+          case "PENDING": alert("updating...");
+          break;
+       }
     })
 
     listen('finish', () => {
@@ -373,7 +392,7 @@ const App = () => {
         )
       }
       {
-        updateAvailable ? (
+        updateAvailableUE || updateAvailableBpk ? (
           <div>
             <IconButton 
               color="primary" 
@@ -399,29 +418,75 @@ const App = () => {
                   onClose={closeSnackbar}
                   severity="info"
                   >
-                  {latestTag} is available, do you want to update ?
-                  <Button
-                   color="secondary"
-                   size="small"
-                   onClick={() => {invoke("pull", {
-                     path: UE4Path
-                     })
-                    }}
-                   >
-                  Yes
-                   </Button>
-                   <Button 
-                     color="secondary"
-                     size="small"
-                     onClick={closeSnackbar}
-                   >
-                  No
-                  </Button>
+                    {
+                      updateAvailableUE ? (
+                        <div>
+                          <FormLabel>
+                          {latestTag} is available, do you want to update ?
+                          </FormLabel>
+                          <Button
+                            color="secondary"
+                            size="small"
+                            onClick={() => invoke("pull", {
+                            path: UE4Path
+                            })
+                            }
+                          >
+                          Yes
+                          </Button>
+                          <Button 
+                            color="secondary"
+                            size="small"
+                            onClick={closeSnackbar}
+                          >
+                          No
+                          </Button>
+                        </div>
+                      ) : null
+                    }
+                    {
+                      updateAvailableBpk ? (
+                        <div>
+                          <FormLabel>
+                           An update is available, do you want to update ?
+                          </FormLabel>
+                          <Button
+                            color="secondary"
+                            size="small"
+                            onClick={() => emit("tauri://update-install") }
+                          >
+                          Yes
+                          </Button>
+                          <Button 
+                            color="secondary"
+                            size="small"
+                            onClick={closeSnackbar}
+                          >
+                          No
+                          </Button>
+                        </div>
+                      ) : null
+                    }
+                    {
+                      finishedupdateBpk ? (
+                        <div>
+                          <FormLabel>
+                            The update is ready, do you want to restart now ?
+                          </FormLabel>
+                          <Button
+                            color="secondary"
+                            size="small"
+                            onClick={() => relaunch() }
+                          >
+                          Restart
+                          </Button>
+                        </div>
+                      ) : null
+                    }
                   </Alert>
               </Snackbar>
-
           </div>
-        ) : null
+        ) : null 
       }
       </Box>
       </div>

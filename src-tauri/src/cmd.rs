@@ -370,7 +370,7 @@ pub async fn handleconnection (token: String, window: Window) -> Result<String, 
         let remote_tag = latest_remote_release.tag_name.strip_suffix("-release");
         let remote_version = Version::parse(remote_tag.unwrap());
         if remote_version.as_ref().unwrap().gt(&localtag(Path::new("F:/UnrealEngine")).unwrap()) {
-            window.emit("update", UpdatePayload { version: remote_version.unwrap().to_string()}).unwrap();
+            window.emit("unrealengine://update", UpdatePayload { version: remote_version.unwrap().to_string()}).unwrap();
         }
         Ok(avatar_url)
     }

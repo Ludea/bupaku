@@ -7,16 +7,16 @@ use tauri_plugin_stronghold::TauriStronghold;
 use tauri::{Manager};
 mod cmd;
 
+#[derive(serde::Serialize)]
+struct Payload {
+  version: String,
+  date: String,
+  body: String 
+}
+
 fn main() {
   tauri::Builder::default()
     .plugin(TauriStronghold::default())
-    .setup(|app| {
-      let main_window = app.get_window("main").unwrap();       
-      main_window.listen("tauri://update-available".to_string(), move |msg| {
-        println!("New version available: {:?}", msg);
-        });
-      Ok(())
-    })
     .invoke_handler(tauri::generate_handler![
       cmd::pull,
       cmd::detect_os,
@@ -24,7 +24,6 @@ fn main() {
       cmd::clone,
       cmd::handleconnection
     ])
-    .plugin(TauriStronghold::default())
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
 }
