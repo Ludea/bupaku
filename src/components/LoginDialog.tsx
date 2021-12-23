@@ -64,7 +64,7 @@ const LoginDialog = ({openDialog, closeDialog, isConnected, anchorEl, avatar_url
         .then((value: any) => {
             isConnected();
             closeDialog() ;
-            avatar_url(value.avatar_url);
+            avatar_url(value);
         })
         .catch((value: any) => {
             console.log(value);
