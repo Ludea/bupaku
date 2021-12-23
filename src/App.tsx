@@ -403,7 +403,10 @@ const App = () => {
                   <Button
                    color="secondary"
                    size="small"
-                   onClick={() => {invoke("pull")}}
+                   onClick={() => {invoke("pull", {
+                     path: UE4Path
+                     })
+                    }}
                    >
                   Yes
                    </Button>

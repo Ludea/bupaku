@@ -333,8 +333,8 @@ fn do_merge<'a>(
 }
 
 #[command]
-pub async fn pull(window: Window) -> Result<(), Giterror> {
-    let repo: Repository = Repository::open(Path::new("F:/UnrealEngine")).unwrap();
+pub async fn pull(window: Window, path: String) -> Result<(), Giterror> {
+    let repo: Repository = Repository::open(Path::new(&path)).unwrap();
     let refs = "4.27.2-release";
    
     let snapshot_path = PathBuf::from("./.bupaku");
