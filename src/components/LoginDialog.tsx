@@ -46,30 +46,23 @@ const LoginDialog = ({openDialog, closeDialog, isConnected, anchorEl, avatar_url
             if (PAT === "")
             setIsPATEmpty(true)
             else {
-                setIsPATEmpty(false);
-                saveValue("username", login );
-                saveValue("PAT", PAT );
-                handleConnection();
+              invoke("handleconnection", 
+               { token: PAT })
+              .then((value: any) => {
+                  isConnected();
+                  closeDialog() ;
+                  avatar_url(value);
+         
+              })
+              .catch((value: any) => {
+                console.log(value);
+              });
             }
         }
     };
 
     const handleClose = () => {
         closeDialog() ;
-    };
-
-    const handleConnection = () => {
-        invoke("handleconnection", 
-        { token: PAT })
-        .then((value: any) => {
-            isConnected();
-            closeDialog() ;
-            avatar_url(value);
-        })
-        .catch((value: any) => {
-            console.log(value);
-        });
-
     };
 
     return (
