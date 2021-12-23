@@ -141,7 +141,7 @@ pub async fn clone(args: Args, window: Window) -> Result<(), Giterror> {
     Ok(())
 }
 
-fn checkout (repo: Repository, refname: &str) -> Result<(), git2::Error> {
+fn checkout (repo: Repository, refname: &str) -> Result<(), Giterror> {
     let (object, reference) = repo.revparse_ext(refname)?;
     repo.checkout_tree(&object, None)?;
 
@@ -345,10 +345,11 @@ pub async fn pull(window: Window) -> Result<(), Giterror> {
     let username = get_value(snapshot_path.clone(), vault.clone(), username_location).await.unwrap();
     let pat = get_value(snapshot_path.clone(), vault.clone(), pat_location).await.unwrap();
 
-    let mut remote = repo.find_remote("origin").unwrap();
+    let mut remote = repo.find_remote("origin")?;
     
     let fetch_commit = do_fetch(&repo, &[refs], &mut remote, window, username, pat)?;
     do_merge(&repo, &refs, fetch_commit)
+    //checkout(repo, &refs)
 }
 
 #[command]
