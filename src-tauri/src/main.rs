@@ -4,7 +4,7 @@
 )]
 
 use tauri_plugin_stronghold::TauriStronghold;
-use tauri::{Manager};
+
 mod cmd;
 
 #[derive(serde::Serialize)]
