@@ -6,6 +6,7 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Popover from '@mui/material/Popover';
 import FormLabel from '@mui/material/FormLabel';
+import LoadingButton from '@mui/lab/LoadingButton';
 
 //components
 import { saveValue, getValue } from 'utils/Storage';
@@ -16,6 +17,7 @@ import { invoke } from "@tauri-apps/api/tauri";
 const LoginDialog = ({openDialog, closeDialog, isConnected, anchorEl, avatar_url}: any) => {
     const [login, setLogin] = useState("");
     const [PAT, setPAT] = useState("");
+    const [pendingLogin, setPendingLogin] = useState<any>();
     const [isLoginEmpty, setIsLoginEmpty] = useState<Boolean>(false);
     const [isPATEmpty, setIsPATEmpty] = useState<Boolean>(false);
 
@@ -46,13 +48,13 @@ const LoginDialog = ({openDialog, closeDialog, isConnected, anchorEl, avatar_url
             if (PAT === "")
             setIsPATEmpty(true)
             else {
+              setPendingLogin(true);
               invoke("handleconnection", 
                { token: PAT })
               .then((value: any) => {
                   isConnected();
                   closeDialog() ;
                   avatar_url(value);
-         
               })
               .catch((value: any) => {
                 console.log(value);
@@ -104,9 +106,13 @@ const LoginDialog = ({openDialog, closeDialog, isConnected, anchorEl, avatar_url
                     />
                 </CardContent>
                 <CardActions>
-                    <Button variant="contained" onClick={ handleLogin }>
+                    <LoadingButton
+                       loading={pendingLogin}
+                       variant='contained'
+                       onClick= { handleLogin }
+                     >
                     Sign In
-                    </Button>
+                    </LoadingButton>
                     <Button variant="contained" onClick={ handleClose }>
                     Cancel
                     </Button>
