@@ -14,6 +14,7 @@ import Badge from '@mui/material/Badge';
 import Snackbar from '@mui/material/Snackbar';
 import FormLabel  from '@mui/material/FormLabel';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
+import { LoadingButton } from '@mui/lab';
 
 //Icons
 import GitHubIcon from '@mui/icons-material/GitHub';
@@ -50,6 +51,7 @@ const App = () => {
   const [isCloning, setIsCloning] = useState<any>(false);
   const [updateAvailableUE, setUpdateAvailableUE] = useState<Boolean>(false);
   const [updateAvailableBpk, setUpdateAvailableBpk] = useState<Boolean>(false);
+  const [pendingUpdate, setPendingUpdate] = useState<any>();
   const [finishedupdateBpk, setFinishedUpdateBpk] = useState<Boolean>(false);
   const [avatar, setAvatar] = useState<any>("");
   const stdoutput = useRef<any>();
@@ -450,13 +452,17 @@ const App = () => {
                           <FormLabel>
                            An update is available, do you want to update ?
                           </FormLabel>
-                          <Button
+                          <LoadingButton
                             color="secondary"
                             size="small"
-                            onClick={() => emit("tauri://update-install") }
+                            loading={pendingUpdate}
+                            onClick={() => { 
+                              emit("tauri://update-install"); 
+                              setPendingUpdate(true);
+                            }}
                           >
                           Yes
-                          </Button>
+                          </LoadingButton>
                           <Button 
                             color="secondary"
                             size="small"
