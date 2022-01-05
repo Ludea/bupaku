@@ -1,13 +1,15 @@
 import { invoke } from "@tauri-apps/api/tauri";
 import { Command } from "@tauri-apps/api/shell";
 
-let cmd: any;
-let child: any ;
+const windows = navigator.userAgent.includes('Windows');
+let cmd = windows ? 'ps' : 'sh' ;
+let args = windows ? ['/C'] : ['-c']
+let child: any;
 
-const runCommand = (arg: any, callback: any) => {
+const runCommand = (script: any, callback: any) => {
   child = null
 
-  const command = new Command("cmd", ["/C", arg])
+  const command = new Command(cmd, [...args, script])
   command.on('close', data => {
     child = null
     callback({code: data.code, signal: data.signal});
