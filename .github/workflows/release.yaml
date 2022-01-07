@@ -1,0 +1,58 @@
+name: "release"
+on:
+  create:
+    tags:
+    - "v*"
+
+jobs:
+  Release:
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [macos-latest, ubuntu-latest, windows-latest]
+
+    runs-on: ${{ matrix.platform }}
+    steps:
+    - uses: actions/checkout@v2.4.0
+    - name: setup node
+      uses: actions/setup-node@v2.5.0
+      with:
+        node-version: 12
+    - name: install Rust stable
+      uses: actions-rs/toolchain@v1.0.7
+      with:
+        toolchain: stable
+    - name: install webkit2gtk (ubuntu only)
+      if: matrix.platform == 'ubuntu-latest'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y webkit2gtk-4.0
+    - name: get version
+      run: echo "PACKAGE_VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_ENV
+    - uses: codecov/codecov-action@v2
+      with:        
+        token: ${{ secrets.CODECOV_TOKEN }}
+    - name: install app dependencies and build it
+      run: yarn && yarn build
+    - uses: tauri-apps/tauri-action@v0.2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
+      with:
+        tagName: v__VERSION__
+        releaseName: 'Bupaku v__VERSION__'
+        releaseBody: 'See the assets to download this version and install.'
+    - name: Upload deb to cloudsmith
+      if: matrix.platform == 'ubuntu-latest'
+      id: cloudsmith
+      uses: cloudsmith-io/action@master
+      with:
+        api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
+        command: "push"
+        format: "deb"
+        distro: "ubuntu"
+        release: "xenial"
+        owner: "ludea"
+        repo: "bupaku_test"
+        republish: "true"
+        file: "src-tauri/target/release/bundle/deb/bupaku_${{ env.PACKAGE_VERSION }}_amd64.deb"
