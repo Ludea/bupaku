@@ -3,8 +3,8 @@ import { Command } from "@tauri-apps/api/shell";
 
 const windows = navigator.userAgent.includes('Windows');
 let cmd = windows ? 'ps' : 'sh' ;
-let args = windows ? ['/C'] : ['-c']
-let child: any;
+let args = windows ? ['/C'] : ['-c'];
+let child : any;
 
 const runCommand = (script: any, callback: any) => {
   child = null
