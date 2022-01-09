@@ -31,6 +31,7 @@ import { open } from "@tauri-apps/api/dialog";
 import { invoke } from "@tauri-apps/api/tauri";
 import { listen, emit } from '@tauri-apps/api/event';
 import { relaunch } from '@tauri-apps/api/process';
+import { checkUpdate, installUpdate } from "@tauri-apps/api/updater";
 
 const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -63,7 +64,30 @@ const App = () => {
     PlatformType = data.host;
   };
 
+  const listenUpdateState = () => {
+    installUpdate();
+    setPendingUpdate(true);
+    listen('tauri://update-status', (status: any) => {
+       switch (status.payload.status) {
+          case "DONE": setFinishedUpdateBpk(true);
+          break;
+          case "ERROR": console.log("error : " + status.payload.error ),
+            setPendingUpdate(false);
+          break;
+       }
+  })
+}
+
   useEffect(() => {
+    const updater = async () => {
+      const {shouldUpdate, manifest} = await checkUpdate();
+      if (shouldUpdate) {
+        setUpdateAvailableBpk(true);
+      }
+    }
+    
+    updater();
+
     listen('objects', (event: any) => {
       let size = String(Math.floor(event.payload.size * 100) / 100)  + "kiB";
       if (event.payload.size > 1024) {
@@ -87,21 +111,6 @@ const App = () => {
     listen('unrealengine://update-available', (event: any) => {
         setLatestTag(event.payload.version)
         setUpdateAvailableUE(true);
-    })
-
-    listen('tauri://update-available', (event: any) => {
-      setUpdateAvailableBpk(true);
-    })
-
-    listen('tauri://update-status', (status: any) => {
-       switch (status) {
-          case "DONE": setFinishedUpdateBpk(true);
-          break;
-          case "ERROR": alert("error");
-          break;
-          case "PENDING": alert("updating...");
-          break;
-       }
     })
 
     listen('finish', () => {
@@ -456,10 +465,7 @@ const App = () => {
                             color="secondary"
                             size="small"
                             loading={pendingUpdate}
-                            onClick={() => { 
-                              emit("tauri://update-install"); 
-                              setPendingUpdate(true);
-                            }}
+                            onClick={ listenUpdateState }
                           >
                           Yes
                           </LoadingButton>
