@@ -48,9 +48,7 @@
     "updater": {
       "active": true,
       "dialog": false,
-      "endpoints": [
-        ""
-      ],
+      "endpoints": [ "https://bupaku.deno.dev/{{target}}/{{current_version}}" ],
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDM4QzA4NkJEMDM1MDcyMTkKUldRWmNsQUR2WWJBT002cVVQUWNiUjZMYlVHS3BFUTBwR2VvWWMxT1ZRTFpCYzdnaGZrU081MTAK"
     },
     "allowlist": {
