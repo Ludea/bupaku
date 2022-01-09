@@ -15,7 +15,7 @@ struct Payload {
 }
 
 fn main() {
-  let app = tauri::Builder::default()
+  tauri::Builder::default()
     .plugin(TauriStronghold::default())
     .invoke_handler(tauri::generate_handler![
       cmd::pull,
@@ -24,12 +24,6 @@ fn main() {
       cmd::clone,
       cmd::handleconnection
     ])
-    .build(tauri::generate_context!())
+    .run(tauri::generate_context!())
     .expect("error while running tauri application");
-    let _ = tauri::PackageInfo{
-      name: app.package_info().name.to_string(),
-      version: app.package_info().version.to_string(),
-    };
-    app.run(| _, _ | {});
-
 }
