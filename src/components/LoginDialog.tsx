@@ -5,6 +5,7 @@ import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Popover from '@mui/material/Popover';
+import Link from '@mui/material/Link';
 import FormLabel from '@mui/material/FormLabel';
 import LoadingButton from '@mui/lab/LoadingButton';
 
@@ -13,6 +14,7 @@ import { saveValue, getValue } from 'utils/Storage';
 
 //API
 import { invoke } from "@tauri-apps/api/tauri";
+import { open } from "@tauri-apps/api/shell";
 
 const LoginDialog = ({openDialog, closeDialog, isConnected, anchorEl, avatar_url}: any) => {
     const [login, setLogin] = useState("");
@@ -21,8 +23,8 @@ const LoginDialog = ({openDialog, closeDialog, isConnected, anchorEl, avatar_url
     const [isLoginEmpty, setIsLoginEmpty] = useState<Boolean>(false);
     const [isPATEmpty, setIsPATEmpty] = useState<Boolean>(false);
 
-    const open = Boolean(anchorEl);
-    const id = open ? 'simple-popover' : undefined;
+    const opendial = Boolean(anchorEl);
+    const id = opendial ? 'simple-popover' : undefined;
 
     useEffect(() => {
         getValue("username")
@@ -131,7 +133,7 @@ const LoginDialog = ({openDialog, closeDialog, isConnected, anchorEl, avatar_url
                     </FormLabel>
                     : null
                 }
-                
+            <Link onClick={() => open("https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token")} component='button'>Where to find Personal Access Token ?</Link>
             </Card>
         </Popover>   
     );
