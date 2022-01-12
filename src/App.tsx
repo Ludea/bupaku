@@ -285,7 +285,7 @@ const App = () => {
               label="UE4 Github"
               value={UE4Github}
               inputProps={{ 'aria-label': 'bare' }}
-           //   onClick={openDialog}
+              onClick={openDialog}
             />
           </Grid>
           <Grid item>
