@@ -245,7 +245,7 @@ const App = () => {
                   alt="foo"
                 src={avatar}
                 onClick={(event) => setAnchorElMenu(event.currentTarget)}
-                sx={{ width: 50, height: 50,  position: 'fixed', right: 50, top: 10 }}
+                sx={{ width: 50, height: 50,  position: 'fixed', right: 35, top: 5 }}
               />
               <Menu
         id="demo-positioned-menu"
@@ -263,12 +263,10 @@ const App = () => {
                 color="primary" 
                 aria-label="upload picture" 
                 component="span"
-                onClick={handleOpenLoginDialog}
-                sx={{
-                position: 'fixed',
-                right: 0
-              }}>
-              <GitHubIcon />
+                onClick={handleOpenLoginDialog}      
+                sx={{position: 'fixed', right: 35, top: 5 }}    
+                >
+              <GitHubIcon sx={{ width: 40, height: 40 }} />
             </IconButton>
             <LoginDialog 
               openDialog={openLoginDialog} 
