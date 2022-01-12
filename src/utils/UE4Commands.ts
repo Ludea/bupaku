@@ -35,40 +35,42 @@ const runCommand = (script: any, callback: any) => {
     })
 };
 
-export const BuildGraph = (Platform: any, Path: any, callback: any ) => {
+export const BuildGraph = (Platform: any[], Path: any, callback: any ) => {
    let UATarguments: string = "";
-   if (Platform != undefined)
-   {
-      switch (Platform.name){
-        case "HostOnly": UATarguments =+ " -Set:HostPlatformOnly=" + Platform.value;
-        break;
-        case "Win64": UATarguments =+ " -Set:WithWin64=" + Platform.value;
-        break;
-        case "Win32": UATarguments =+ " -Set:WithWin32=" + Platform.value;
-        break;
-        case "Mac": UATarguments =+ " -Set:WithMac=" + Platform.value;
-        break;
-        case "Linux": UATarguments =+ " -Set:WithLinux=" + Platform.value;
-        break;
-        case "Android": UATarguments =+ " -Set:WithAndroid=" + Platform.value;
-        break;
-        case "IOS": UATarguments =+ " -Set:WithIOS=" + Platform.value;
-        break;
-        case "TVOS": UATarguments =+ " -Set:WithTVOS=" + Platform.value;
-        break;
-        case "Switch": UATarguments =+ " -Set:WithSwitch=" + Platform.value;
-        break;
-        case "PS4": UATarguments =+ " -Set:WithPS4=" + Platform.value;
-        break;
-        case "Xbox": UATarguments =+ " -Set:WithXboxOne=" + Platform.value;
-        break;
-        case "Lumin": UATarguments =+ " -Set:WithLumin=" + Platform.value;
-        break;
-        case "Hololens": UATarguments =+ " -Set:WithHololens=" + Platform.value;
-        break;
-        default: UATarguments = "";
+   for (let i = 0; i < Platform.length; i++) {
+     if (Platform != undefined)
+     {
+        switch (Platform[i].name){
+          case "HostOnly": UATarguments += " -Set:HostPlatformOnly=" + Platform[i].value;
+          break;
+          case "Win64": UATarguments += " -Set:WithWin64=" + Platform[i].value;
+          break;
+          case "Win32": UATarguments += " -Set:WithWin32=" + Platform[i].value;
+          break;
+          case "Mac": UATarguments += " -Set:WithMac=" + Platform[i].value;
+          break;
+          case "Linux": UATarguments += " -Set:WithLinux=" + Platform[i].value;
+          break;
+          case "Android": UATarguments += " -Set:WithAndroid=" + Platform[i].value;
+          break;
+          case "IOS": UATarguments += " -Set:WithIOS=" + Platform[i].value;
+          break;
+          case "TVOS": UATarguments += " -Set:WithTVOS=" + Platform[i].value;
+          break;
+          case "Switch": UATarguments += " -Set:WithSwitch=" + Platform[i].value;
+          break;
+          case "PS4": UATarguments += " -Set:WithPS4=" + Platform[i].value;
+          break;
+          case "Xbox": UATarguments += " -Set:WithXboxOne=" + Platform[i].value;
+          break;
+          case "Lumin": UATarguments += " -Set:WithLumin=" + Platform[i].value;
+          break;
+          case "Hololens": UATarguments += " -Set:WithHololens=" + Platform[i].value;
+          break;
+          default: UATarguments = "";
+        }
       }
-    }
+   }
    Extensions
     .then((extension: any) => {
      Target
@@ -79,7 +81,7 @@ export const BuildGraph = (Platform: any, Path: any, callback: any ) => {
         let XMLPath =  "".concat(' -script="', UE4Path, '/Engine/Build/InstalledEngineBuild.xml"') ;
         runCommand(RunUATPath + build_target + XMLPath + UATarguments, (output: any) => {
               callback(output)
-        } )
+        })
       })
       .catch((error: any) => {
         callback(error);

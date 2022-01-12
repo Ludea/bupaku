@@ -31,15 +31,14 @@ const Platforms = (props: any) => {
           }
         });
       }, []);*/
-
+    let host: any ;
     const handleChange = (event: any) => {
         setChecked((checked: any) => ({...checked, [event.target.name]: event.target.checked}));
-        let host = {
-            "name":event.target.name,
+        host = {
+            "name": event.target.name,
             "value": event.target.checked
         };
-
-        saveValue(event.target.name, event.target.checked.toString());
+       // saveValue(event.target.name, event.target.checked.toString());
         props.Platform({host});
     };
 

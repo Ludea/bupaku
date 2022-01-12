@@ -59,9 +59,9 @@ const App = () => {
 
   const openMenu = Boolean(anchorElMenu);
 
-  let PlatformType: any;
-  const Platform = (data: any) => { 
-    PlatformType = data.host;
+  let PlatformType: any = [];
+  const Platform = (data: any) => {
+    PlatformType.push(data.host);
   };
 
   const listenUpdateState = () => {
