@@ -52,7 +52,12 @@
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDM4QzA4NkJEMDM1MDcyMTkKUldRWmNsQUR2WWJBT002cVVQUWNiUjZMYlVHS3BFUTBwR2VvWWMxT1ZRTFpCYzdnaGZrU081MTAK"
     },
     "allowlist": {
-      "all": true
+      "fs": {
+        "readDir": true
+      },
+      "dialog": {
+        "open": true
+      }
     },
     "windows": [
       {

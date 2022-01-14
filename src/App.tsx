@@ -35,6 +35,7 @@ import { invoke } from "@tauri-apps/api/tauri";
 import { listen, emit } from '@tauri-apps/api/event';
 import { relaunch } from '@tauri-apps/api/process';
 import { checkUpdate, installUpdate } from "@tauri-apps/api/updater";
+import { fs } from '@tauri-apps/api';
 
 const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -130,7 +131,7 @@ const App = () => {
 
     getValue("UE4Path").then((value: any) => {
       if ( value != undefined)  {
-        setUE4Path('"' + value );
+        setUE4Path(value);
       }
     })
     .catch(() =>{});
@@ -177,6 +178,10 @@ const App = () => {
         stdoutput.current.value = "Please set UE4 directory";
       }
       else {
+        fs.readDir(UE4Path).then(data => {
+          if (!data.length)
+          stdoutput.current.value += "The directory you specified is empty" ;
+        })
         setIsBuilding(true);
         BuildGraph(PlatformType, UE4Path, (data: any) => {
           setPid(data.pid);
@@ -305,10 +310,11 @@ const App = () => {
               value={UE4Path}
               type='text'
               inputProps={{ 'aria-label': 'bare' }}
-              endAdornment={ <InputAdornment position='end'>
-                      <IconButton onClick={openDialog}>
-                        <FolderOpenIcon/>
-                      </IconButton>
+              endAdornment={ 
+                <InputAdornment position='end'>
+                  <IconButton onClick={() => openDialog()}>
+                    <FolderOpenIcon/>
+                  </IconButton>
                 </InputAdornment>
               }
             />
