@@ -173,7 +173,6 @@ const App = () => {
   const RunCommand = (arg: any) => {
     stdoutput.current.value = "";
     if (arg === "BuildGraph") {
-      console.log(UE4Path);
       if (UE4Path === "") {
         stdoutput.current.value = "Please set UE4 directory";
       }
