@@ -13,12 +13,15 @@ import Menu from '@mui/material/Menu';
 import Badge from '@mui/material/Badge';
 import Snackbar from '@mui/material/Snackbar';
 import FormLabel  from '@mui/material/FormLabel';
+import InputAdornment from '@mui/material/InputAdornment';
+import Input from '@mui/material/Input';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import { LoadingButton } from '@mui/lab';
 
 //Icons
 import GitHubIcon from '@mui/icons-material/GitHub';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
+import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 
 //components
 import Platforms from 'components/Platforms';
@@ -297,12 +300,18 @@ const App = () => {
             />
           </Grid>
           <Grid item>
-            <TextField
+            <InputLabel htmlFor='UE4path'>UE4 Path</InputLabel>
+            <Input
               id="UE4Path"
-              label="UE4 path"
               value={UE4Path}
+              type='text'
               inputProps={{ 'aria-label': 'bare' }}
-              onClick={openDialog}
+              endAdornment={ <InputAdornment position='end'>
+                      <IconButton onClick={openDialog}>
+                        <FolderOpenIcon/>
+                      </IconButton>
+                </InputAdornment>
+              }
             />
           </Grid>
           <Grid item>
