@@ -2,33 +2,28 @@ import { invoke } from "@tauri-apps/api/tauri";
 import { Command } from "@tauri-apps/api/shell";
 
 const windows = navigator.userAgent.includes('Windows');
-let cmd = windows ? 'ps' : 'sh' ;
+let cmd = windows ? 'cmd' : 'sh' ;
 let args = windows ? ['/C'] : ['-c'];
-let child : any;
 
 const runCommand = (script: any, callback: any) => {
-  child = null
-
   const command = new Command(cmd, [...args, script])
   command.on('close', data => {
-    child = null
     callback({code: data.code, signal: data.signal});
   })
   command.on('error', error => {
-    callback(error);
+    callback({error: error});
   })
   command.stdout.on('data', line => {
-    callback(line);
+    callback({data: line});
   })
   
   command.stderr.on('data', line => {
-    callback(line);
+    callback({stderr: line});
   }); 
 
   command.spawn()
     .then(data => {
-      //pid
-      child = data
+      callback(data);
     })
     .catch(error => {
        callback(error);
@@ -78,7 +73,7 @@ export const BuildGraph = (Platform: any[], Path: any, callback: any ) => {
         let UE4Path = Path;
         let RunUATPath = UE4Path.concat('/Engine/Build/BatchFiles/RunUAT', extension) ;
         let build_target = "".concat( ' BuildGraph -Target="', 'Make Installed Build ', target, '"' ) ;
-        let XMLPath =  "".concat(' -script="', UE4Path, '/Engine/Build/InstalledEngineBuild.xml"') ;
+        let XMLPath =  "".concat(' -script=', UE4Path, '/Engine/Build/InstalledEngineBuild.xml"') ;
         runCommand(RunUATPath + build_target + XMLPath + UATarguments, (output: any) => {
               callback(output)
         })
@@ -103,8 +98,8 @@ export const SetupDependencies = (Path: any, callback: any) => {
     })
 };
 
-export const KillProcess = new Promise((resolve, reject) => {
-    child.kill()
+export const KillProcess = (pid: any) => new Promise((resolve, reject) => {
+    pid.kill()
          .then(() => {
             resolve("Stopping process");
          })

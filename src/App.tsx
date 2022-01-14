@@ -55,6 +55,7 @@ const App = () => {
   const [pendingUpdate, setPendingUpdate] = useState<any>();
   const [finishedupdateBpk, setFinishedUpdateBpk] = useState<Boolean>(false);
   const [avatar, setAvatar] = useState<any>("");
+  const [pid, setPid] = useState<any>(); 
   const stdoutput = useRef<any>();
 
   const openMenu = Boolean(anchorElMenu);
@@ -126,7 +127,7 @@ const App = () => {
 
     getValue("UE4Path").then((value: any) => {
       if ( value != undefined)  {
-        setUE4Path(value);
+        setUE4Path('"' + value );
       }
     })
     .catch(() =>{});
@@ -167,7 +168,8 @@ const App = () => {
   }
 
   const RunCommand = (arg: any) => {
-    //stdoutput.current.value = "";
+    let previous: any ;
+    stdoutput.current.value = "";
     if (arg === "BuildGraph") {
       if (UE4Path === undefined) {
         stdoutput.current.value = "Please set UE4 directory";
@@ -175,14 +177,20 @@ const App = () => {
       else {
         setIsBuilding(true);
         BuildGraph(PlatformType, UE4Path, (data: any) => {
-          stdoutput.current.value += data + "\r";
-          if (data.code === 0)
+          setPid(data.pid);
+          if (data.error) {
+            stdoutput.current.value += data.error + "\r" ;
+          }
+          if (data.stderr) {
+            stdoutput.current.value += data.stderr + "\r" ;
+          }
+          if (data.signal === 0 || 1)
             setIsBuilding(false);
         });
       }
     }
     if (arg === "Kill") {
-      KillProcess
+      KillProcess(pid)
         .then((data: any) => {
           stdoutput.current.value += data;
         });
