@@ -171,10 +171,10 @@ const App = () => {
   }
 
   const RunCommand = (arg: any) => {
-    let previous: any ;
     stdoutput.current.value = "";
     if (arg === "BuildGraph") {
-      if (UE4Path === undefined) {
+      console.log(UE4Path);
+      if (UE4Path === "") {
         stdoutput.current.value = "Please set UE4 directory";
       }
       else {
@@ -200,7 +200,7 @@ const App = () => {
       setIsBuilding(false);
     }
     if (arg === "Setup")
-      if (UE4Path === undefined) {
+      if (UE4Path === "") {
         stdoutput.current.value = "Please set UE4 directory";
       }
       else {
