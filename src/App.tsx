@@ -84,14 +84,15 @@ const App = () => {
 }
 
   useEffect(() => {
-    const updater = async () => {
+    const updater = async() => {
       const {shouldUpdate, manifest} = await checkUpdate();
       if (shouldUpdate) {
         setUpdateAvailableBpk(true);
       }
     }
     
-    updater();
+    updater()
+    .catch(value => stdoutput.current.value = value);
 
     listen('objects', (event: any) => {
       let size = String(Math.floor(event.payload.size * 100) / 100)  + "kiB";
