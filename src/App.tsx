@@ -261,7 +261,7 @@ const App = () => {
 
   return (
     <div>
-       <Box sx={{ flexGrow: 1 }}>
+      <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={1}>
           {
             isGHConnected ? (
@@ -308,11 +308,11 @@ const App = () => {
             <TextField
               id="UE4 git"
               label="UE4 Github"
+              variant='standard'
               value={UE4Github}
               inputProps={{ 'aria-label': 'bare' }}
-              onClick={openDialog}
             />
-          </Grid>
+            </Grid>
           <Grid item>
             <InputLabel htmlFor='UE4path'>UE4 Path</InputLabel>
             <Input
@@ -330,7 +330,7 @@ const App = () => {
             />
           </Grid>
           <Grid item>
-            <FormControl sx={{ minWidth: 120 }}>
+            <FormControl variant='standard' sx={{ minWidth: 120 }}>
               <InputLabel id="ue4version">UE4 Version</InputLabel>
                 <Select
                   labelId="ue4version"
@@ -345,7 +345,7 @@ const App = () => {
             </FormControl>
           </Grid>
         </Grid>
-      </Box> 
+      </Box>
       {
         !isCloning ?
       <Button
