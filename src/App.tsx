@@ -93,8 +93,8 @@ const App = () => {
     
     updater()
     .catch(value => stdoutput.current.value = value);
-
-    listen('objects', (event: any) => {
+    let previous: any;
+    listen('git://objects', (event: any) => {
       let size = String(Math.floor(event.payload.size * 100) / 100)  + "kiB";
       if (event.payload.size > 1024) {
         size = (Math.floor(event.payload.size / 1024 * 100) / 100).toString() + "MiB";
@@ -102,12 +102,24 @@ const App = () => {
       if (event.payload.size > 1024 * 1024) {
         size = (Math.floor(event.payload.size / (1024*1024) * 100) / 100).toString() + "GiB";
       }
-      //stdoutput.current.value += "\n";
-      stdoutput.current.value = "Receiving objects : " + event.payload.network_pct + "%" + " (" + event.payload.received_objects + "/" + event.payload.total_objects + "), " + size ;
-    })
+      previous = "Cloning UnrealEngine";
+      stdoutput.current.value = previous + "\n" + "Receiving objects : " + event.payload.pct + "%" + " (" + event.payload.received_objects + "/" + event.payload.total_objects + "), " + size ;
+      if (event.payload.pct === 100) {
+        previous += "\n" + "Receiving objects : " + event.payload.pct + "%" + " (" + event.payload.received_objects + "/" + event.payload.total_objects + "), " + size + ", done" ;
+      }
+      })
 
-    listen('deltas', (event: any) => {
-      stdoutput.current.value = "Resolving deltas : " + "(" + event.payload.indexed_deltas + "/" + event.payload.total_deltas + ")"; 
+    listen('git://delta', (event: any) => {
+        stdoutput.current.value = previous + "\n" + "Resolving deltas : " +  event.payload.pct + "%" + " (" + event.payload.indexed_deltas + "/" + event.payload.total_deltas + ")"; 
+      if ((event.payload.indexed_deltas === event.payload.total_deltas) && event.payload.indexed_deltas != 0 )
+        previous += "\n" + "Resolving deltas : " + event.payload.pct + "%" + " (" + event.payload.indexed_deltas + "/" + event.payload.total_deltas + "), done"; 
+    });
+
+    listen('git://write', (event: any) => {
+      stdoutput.current.value = previous + "\n" + "Updating files : " + event.payload.pct + "%" + " (" + event.payload.indexed_files + "/" + event.payload.total_files + ")"; 
+      if (event.payload.pct === 100) {
+        stdoutput.current.value = previous + "\n" + "Updating files : " +  event.payload.pct + "%" + " (" + event.payload.indexed_files + "/" + event.payload.total_files + "), done"; 
+      }
     });
 
     listen('deltas_fetch', (event: any) => {
@@ -221,9 +233,6 @@ const App = () => {
       setIsCloning(true);
         invoke("clone", { args: {
           arg_url: UE4Github, arg_path: UE4Path, arg_tag: UE4Version}
-        })
-        .then((value) => {
-          stdoutput.current.value = value ;
         })
       }
   }

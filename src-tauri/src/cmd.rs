@@ -5,7 +5,7 @@ use std::path::{Path, PathBuf};
 use std::{time::Duration};
 use git2::build::{CheckoutBuilder, RepoBuilder};
 use git2::{Error, Repository};
-use git2::{FetchOptions, Progress, RemoteCallbacks, Cred};
+use git2::{FetchOptions, RemoteCallbacks, Cred};
 use octocrab::{Octocrab};
 use octocrab::models::{User, repos::Release};
 use semver::{Version};
@@ -29,13 +29,15 @@ pub struct Args {
 
 #[derive(Clone, Serialize)]
 struct ObjectPayload {
-  network_pct: usize,
-  received_objects: usize,
-  total_objects: usize,
-  indexed_objects: usize,
-  indexed_deltas: usize,
-  total_deltas: usize,
-  size: usize,
+  pct: Option<usize>,
+  received_objects: Option<usize>,
+  total_objects: Option<usize>,
+  indexed_objects: Option<usize>,
+  indexed_deltas: Option<usize>,
+  total_deltas: Option<usize>,
+  indexed_files: Option<usize>,
+  total_files: Option<usize>,
+  size: Option<usize>,
 }
 
 #[derive(Clone, Serialize)]
@@ -104,28 +106,47 @@ pub async fn clone(args: Args, window: Window) -> Result<(), Giterror> {
     });
 
     cb.transfer_progress(|stats| {
-        window.emit("objects", ObjectPayload { 
-            network_pct: (100 * stats.received_objects()) / stats.total_objects(), 
-            received_objects: stats.received_objects(), 
-            total_objects: stats.total_objects(), 
-            indexed_objects: stats.indexed_objects(),
-            size: stats.received_bytes() / 1024, 
-            indexed_deltas: 0, 
-            total_deltas: 0 })
-            .unwrap();
+        if stats.indexed_deltas() == 0 {
+            window.emit("git://objects", ObjectPayload { 
+                pct: Some((100 * stats.received_objects()) / stats.total_objects()), 
+                received_objects: Some(stats.received_objects()), 
+                total_objects: Some(stats.total_objects()), 
+                indexed_objects: Some(stats.indexed_objects()),
+                size: Some(stats.received_bytes() / 1024),
+                indexed_deltas: None,
+                total_deltas: None,
+                indexed_files: None,
+                total_files: None 
+                 }).unwrap();
+        }
+        else {
+            window.emit("git://delta", ObjectPayload { 
+                pct: Some((100 * stats.indexed_deltas() )/ stats.total_deltas() ), 
+                received_objects: None, 
+                total_objects: None, 
+                indexed_objects: None,
+                size: None, 
+                indexed_deltas: Some(stats.indexed_deltas()), 
+                total_deltas: Some(stats.total_deltas()),
+                indexed_files: None,
+                total_files: None 
+                }).unwrap();
+        }
         true
     });
 
     let mut co = CheckoutBuilder::new();
     co.progress(|_, current, total| {
-        window.emit("deltas", ObjectPayload{
-            network_pct: 0,
-            received_objects: 0,
-            total_objects: 0,
-            indexed_objects: 0,
-            size: 0,
-            indexed_deltas: current,
-            total_deltas: total,
+        window.emit("git://write", ObjectPayload{
+            pct: Some((100 * current) / total),
+            received_objects: None,
+            total_objects: None,
+            indexed_objects: None,
+            size: None,
+            indexed_deltas: None,
+            total_deltas: None,
+            indexed_files: Some(current),
+            total_files: Some(total)
         }).unwrap();
     });
 
@@ -171,23 +192,27 @@ fn do_fetch<'a> (
     cb.transfer_progress(|stats| {
         if stats.received_objects() == stats.total_objects() {
             window.emit("deltas_fetch", ObjectPayload {
-                network_pct: 0,
-                received_objects: 0,
-                total_objects: 0,
-                indexed_objects: 0,
-                indexed_deltas: stats.indexed_deltas(),
-                total_deltas: stats.total_deltas(),
-                size: 0,
+                pct: None,
+                received_objects: None,
+                total_objects: None,
+                indexed_objects: None,
+                indexed_deltas: Some(stats.indexed_deltas()),
+                total_deltas: Some(stats.total_deltas()),
+                size: None,
+                indexed_files: None,
+                total_files: None,
             }).unwrap();
         } else if stats.total_objects() > 0 {
             window.emit("object_fetch", ObjectPayload { 
-                network_pct: 0,
-                received_objects: stats.received_objects(), 
-                total_objects: stats.total_objects(), 
-                indexed_objects: stats.indexed_objects(),
-                indexed_deltas: 0,
-                total_deltas: 0,
-                size: stats.received_bytes()
+                pct: None,
+                received_objects: Some(stats.received_objects()), 
+                total_objects: Some(stats.total_objects()), 
+                indexed_objects: Some(stats.indexed_objects()),
+                indexed_deltas: None,
+                total_deltas: None,
+                size: Some(stats.received_bytes()),
+                indexed_files: None,
+                total_files: None
             }).unwrap();
         }
         true
@@ -369,9 +394,9 @@ pub async fn handleconnection (token: String, window: Window) -> Result<String, 
         let latest_remote_release = latest_release(octocrab).await.unwrap();
         let remote_tag = latest_remote_release.tag_name.strip_suffix("-release");
         let remote_version = Version::parse(remote_tag.unwrap());
-        if remote_version.as_ref().unwrap().gt(&localtag(Path::new("F:/UnrealEngine")).unwrap()) {
+       /* if remote_version.as_ref().unwrap().gt(&localtag(Path::new("F:/UnrealEngine")).unwrap()) {
             window.emit("unrealengine://update", UpdatePayload { version: remote_version.unwrap().to_string()}).unwrap();
-        }
+        }*/
         Ok(avatar_url)
     }
     else {
