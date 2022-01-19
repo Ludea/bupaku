@@ -299,6 +299,7 @@ const App = () => {
               anchorEl={anchorEl}
               isConnected={Connected}
               avatar_url={(value: any) => setAvatar(value)}
+              uepath={UE4Path}
             >
             </LoginDialog>
             </div>

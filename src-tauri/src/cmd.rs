@@ -378,7 +378,7 @@ pub async fn pull(window: Window, path: String) -> Result<(), Giterror> {
 }
 
 #[command]
-pub async fn handleconnection (token: String, window: Window) -> Result<String, AError> {
+pub async fn handleconnection (token: String, path: String, window: Window) -> Result<String, AError> {
     let octocrab = Octocrab::builder().personal_token(token.clone()).build()?;
 
     let user = ghuser(octocrab.clone());
@@ -394,9 +394,17 @@ pub async fn handleconnection (token: String, window: Window) -> Result<String, 
         let latest_remote_release = latest_release(octocrab).await.unwrap();
         let remote_tag = latest_remote_release.tag_name.strip_suffix("-release");
         let remote_version = Version::parse(remote_tag.unwrap());
-       /* if remote_version.as_ref().unwrap().gt(&localtag(Path::new("F:/UnrealEngine")).unwrap()) {
-            window.emit("unrealengine://update", UpdatePayload { version: remote_version.unwrap().to_string()}).unwrap();
-        }*/
+        let local_tag = localtag(Path::new(&path));
+
+        match local_tag {
+            Ok(value) => {
+                if remote_version.as_ref().unwrap().gt(&value) {
+                    window.emit("unrealengine://update", UpdatePayload { version: remote_version.unwrap().to_string()}).unwrap();
+                }
+            } ,
+            Err(_) => {}
+        }
+        
         Ok(avatar_url)
     }
     else {

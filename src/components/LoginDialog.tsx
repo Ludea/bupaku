@@ -16,7 +16,7 @@ import { saveValue, getValue } from 'utils/Storage';
 import { invoke } from "@tauri-apps/api/tauri";
 import { open } from "@tauri-apps/api/shell";
 
-const LoginDialog = ({openDialog, closeDialog, isConnected, anchorEl, avatar_url}: any) => {
+const LoginDialog = ({openDialog, closeDialog, isConnected, anchorEl, avatar_url, uepath}: any) => {
     const [login, setLogin] = useState("");
     const [PAT, setPAT] = useState("");
     const [pendingLogin, setPendingLogin] = useState<any>();
@@ -52,7 +52,7 @@ const LoginDialog = ({openDialog, closeDialog, isConnected, anchorEl, avatar_url
             else {
               setPendingLogin(true);
               invoke("handleconnection", 
-               { token: PAT })
+               { token: PAT, path: uepath})
               .then((value: any) => {
                   isConnected();
                   closeDialog() ;
