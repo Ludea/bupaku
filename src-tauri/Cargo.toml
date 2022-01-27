@@ -20,7 +20,7 @@ git2 = "0.13.25"
 semver = "1.0.4"
 iota-crypto = { version = "0.9.1", features = [ "pbkdf" ] }
 iota_stronghold = "0.4.1"
-octocrab = "0.15.3"
+octocrab = "0.15.4"
 serde = { version = "1.0", features = [ "derive" ] }
 tauri = { version = "1.0.0-beta.8", features = ["dialog-open", "fs-read-dir", "updater"] }
 
