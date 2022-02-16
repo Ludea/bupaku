@@ -5,7 +5,7 @@
   "dependencies": {
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
-    "@mui/icons-material": "^5.4.1",
+    "@mui/icons-material": "^5.4.2",
     "@mui/lab": "^5.0.0-alpha.69",
     "@mui/material": "^5.4.2",
     "@tauri-apps/api": "^1.0.0-rc.1",
