@@ -8,7 +8,7 @@
     "@mui/icons-material": "^5.6.2",
     "@mui/lab": "^5.0.0-alpha.79",
     "@mui/material": "^5.6.3",
-    "@tauri-apps/api": "^1.0.0-rc.3",
+    "@tauri-apps/api": "^1.0.0-rc.4",
     "@tauri-apps/cli": "^1.0.0-rc.8",
     "@tauri-apps/tauri-forage": "^1.0.0-beta.2",
     "react": "^18.1.0",
