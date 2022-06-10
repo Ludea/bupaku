@@ -535,7 +535,7 @@ dependencies = [
  "iota-crypto 0.11.0",
  "iota_stronghold 0.5.1",
  "octocrab",
- "semver 1.0.9",
+ "semver 1.0.10",
  "serde 1.0.137",
  "serde_json",
  "tauri",
@@ -4296,9 +4296,9 @@ dependencies = [
 
 [[package]]
 name = "semver"
-version = "1.0.9"
+version = "1.0.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8cb243bdfdb5936c8dc3c45762a19d12ab4550cdc753bc247637d4ec35a040fd"
+checksum = "a41d061efea015927ac527063765e73601444cdc344ba855bc7bd44578b25e1c"
 dependencies = [
  "serde 1.0.137",
 ]
@@ -5039,7 +5039,7 @@ dependencies = [
  "rand 0.8.4",
  "raw-window-handle",
  "rfd",
- "semver 1.0.9",
+ "semver 1.0.10",
  "serde 1.0.137",
  "serde_json",
  "serde_repr",
@@ -5086,7 +5086,7 @@ dependencies = [
  "png 0.17.5",
  "proc-macro2 1.0.37",
  "quote 1.0.9",
- "semver 1.0.9",
+ "semver 1.0.10",
  "serde 1.0.137",
  "serde_json",
  "sha2 0.10.1",
@@ -5185,7 +5185,7 @@ dependencies = [
  "phf 0.10.0",
  "proc-macro2 1.0.37",
  "quote 1.0.9",
- "semver 1.0.9",
+ "semver 1.0.10",
  "serde 1.0.137",
  "serde_json",
  "serde_with",
