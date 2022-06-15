@@ -11,7 +11,7 @@
     "@tauri-apps/api": "^1.0.0-rc.6",
     "@tauri-apps/cli": "^1.0.0-rc.13",
     "@tauri-apps/tauri-forage": "^1.0.0-beta.2",
-    "react": "^18.1.0",
+    "react": "^18.2.0",
     "react-dom": "^18.1.0",
     "tauri-plugin-stronghold-api": "github:tauri-apps/tauri-plugin-stronghold#647da429300d2886479ceabdcebf9bb5b0dda78f",
     "vite-tsconfig-paths": "^3.5.0"
