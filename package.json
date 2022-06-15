@@ -5,9 +5,9 @@
   "dependencies": {
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
-    "@mui/icons-material": "^5.8.3",
+    "@mui/icons-material": "^5.8.4",
     "@mui/lab": "^5.0.0-alpha.86",
-    "@mui/material": "^5.8.3",
+    "@mui/material": "^5.8.4",
     "@tauri-apps/api": "^1.0.0-rc.6",
     "@tauri-apps/cli": "^1.0.0-rc.13",
     "@tauri-apps/tauri-forage": "^1.0.0-beta.2",
