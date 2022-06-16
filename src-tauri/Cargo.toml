@@ -11,7 +11,7 @@ rust-version = "1.56"
 build = "src/build.rs"
 
 [build-dependencies]
-tauri-build = { version = "1.0.0-beta.3" }
+tauri-build = { version = "1.0.0" }
 
 [dependencies]
 fs2 = "0.4.3"
@@ -22,7 +22,7 @@ iota-crypto = { version = "0.11.0", features = [ "pbkdf" ] }
 iota_stronghold = "0.5.1"
 octocrab = "0.16.0"
 serde = { version = "1.0", features = [ "derive" ] }
-tauri = { version = "1.0.0-rc.14", features = ["dialog-open", "fs-read-dir", "updater"] }
+tauri = { version = "1.0.0", features = ["dialog-open", "fs-read-dir", "updater"] }
 
   [dependencies.tauri-plugin-stronghold]
   git = "https://github.com/tauri-apps/tauri-plugin-stronghold"
