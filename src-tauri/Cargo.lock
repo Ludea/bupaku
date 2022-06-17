@@ -531,7 +531,7 @@ version = "0.1.0"
 dependencies = [
  "fs2",
  "git2",
- "iota-crypto 0.11.0",
+ "iota-crypto 0.12.1",
  "iota_stronghold 0.5.1",
  "octocrab",
  "semver 1.0.10",
@@ -1150,6 +1150,7 @@ checksum = "f2fb860ca6fafa5552fb6d0e816a69c8e49f0908bf524e30a90d97c85892d506"
 dependencies = [
  "block-buffer 0.10.2",
  "crypto-common",
+ "subtle 2.4.1",
 ]
 
 [[package]]
@@ -2249,7 +2250,7 @@ dependencies = [
  "generic-array 0.14.5",
  "getrandom 0.2.7",
  "hmac 0.11.0",
- "pbkdf2",
+ "pbkdf2 0.8.0",
  "serde 1.0.137",
  "sha2 0.9.9",
  "unicode-normalization",
@@ -2273,7 +2274,7 @@ dependencies = [
  "generic-array 0.14.5",
  "getrandom 0.2.7",
  "hmac 0.11.0",
- "pbkdf2",
+ "pbkdf2 0.8.0",
  "serde 1.0.137",
  "sha2 0.9.9",
  "unicode-normalization",
@@ -2282,11 +2283,11 @@ dependencies = [
 
 [[package]]
 name = "iota-crypto"
-version = "0.11.0"
+version = "0.12.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "95d41f0f3739c8fd4513ab24e8643786d3673bb55c4a07be3ec95b4cac751f7e"
+checksum = "f03717e934972fad6f1c9b4cd25f662e1753b58a7f76e3dceadeb646e034b252"
 dependencies = [
- "pbkdf2",
+ "pbkdf2 0.11.0",
 ]
 
 [[package]]
@@ -3499,6 +3500,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d95f5254224e617595d2cc3cc73ff0a5eaf2637519e25f03388154e9378b6ffa"
 dependencies = [
  "crypto-mac 0.11.1",
+]
+
+[[package]]
+name = "pbkdf2"
+version = "0.11.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "83a0692ec44e4cf1ef28ca317f14f8f07da2d95ec3fa01f86e4467b725e60917"
+dependencies = [
+ "digest 0.10.3",
 ]
 
 [[package]]
