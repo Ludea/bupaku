@@ -532,7 +532,7 @@ dependencies = [
  "fs2",
  "git2",
  "iota-crypto 0.12.1",
- "iota_stronghold 0.5.1",
+ "iota_stronghold 0.6.0",
  "octocrab",
  "semver 1.0.10",
  "serde 1.0.137",
@@ -1268,6 +1268,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "ed25519-zebra"
+version = "3.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "403ef3e961ab98f0ba902771d29f842058578bb1ce7e3c59dad5a6a93e784c69"
+dependencies = [
+ "curve25519-dalek",
+ "hex",
+ "rand_core 0.6.3",
+ "sha2 0.9.9",
+ "thiserror",
+ "zeroize",
+]
+
+[[package]]
 name = "either"
 version = "1.6.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1946,12 +1960,11 @@ checksum = "7f24254aa9a54b5c858eaee2f5bccdb46aaf0e486a595ed5fd8f86ba55232a70"
 
 [[package]]
 name = "hkdf"
-version = "0.11.0"
+version = "0.12.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "01706d578d5c281058480e673ae4086a9f4710d8df1ad80a5b03e39ece5f886b"
+checksum = "791a029f6b9fc27657f6f188ec6e5e43f6911f6f878e0dc5501396e09809d437"
 dependencies = [
- "digest 0.9.0",
- "hmac 0.11.0",
+ "hmac 0.12.1",
 ]
 
 [[package]]
@@ -1972,6 +1985,15 @@ checksum = "2a2a2320eb7ec0ebe8da8f744d7812d9fc4cb4d09344ac01898dbcb6a20ae69b"
 dependencies = [
  "crypto-mac 0.11.1",
  "digest 0.9.0",
+]
+
+[[package]]
+name = "hmac"
+version = "0.12.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6c49c37c09c17a53d937dfbb742eb3a961d65a994e6bcdcf37e7399d0cc8ab5e"
+dependencies = [
+ "digest 0.10.3",
 ]
 
 [[package]]
@@ -2246,7 +2268,7 @@ dependencies = [
  "blake2",
  "chacha20poly1305",
  "digest 0.9.0",
- "ed25519-zebra",
+ "ed25519-zebra 2.2.0",
  "generic-array 0.14.5",
  "getrandom 0.2.7",
  "hmac 0.11.0",
@@ -2264,20 +2286,14 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ee273ae67ff1bc7c59317c0ab280e0e76259e6bd83e140ac4c2ecebec994f740"
 dependencies = [
  "aead",
- "aes",
- "aes-gcm",
  "blake2",
  "chacha20poly1305",
  "curve25519-dalek",
  "digest 0.9.0",
- "ed25519-zebra",
  "generic-array 0.14.5",
  "getrandom 0.2.7",
  "hmac 0.11.0",
- "pbkdf2 0.8.0",
- "serde 1.0.137",
  "sha2 0.9.9",
- "unicode-normalization",
  "x25519-dalek",
 ]
 
@@ -2287,7 +2303,22 @@ version = "0.12.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f03717e934972fad6f1c9b4cd25f662e1753b58a7f76e3dceadeb646e034b252"
 dependencies = [
+ "aead",
+ "aes",
+ "aes-gcm",
+ "chacha20poly1305",
+ "curve25519-dalek",
+ "digest 0.10.3",
+ "ed25519-zebra 3.0.0",
+ "generic-array 0.14.5",
+ "getrandom 0.2.7",
+ "hmac 0.12.1",
  "pbkdf2 0.11.0",
+ "serde 1.0.137",
+ "sha2 0.10.2",
+ "unicode-normalization",
+ "x25519-dalek",
+ "zeroize",
 ]
 
 [[package]]
@@ -2312,13 +2343,13 @@ dependencies = [
 
 [[package]]
 name = "iota_stronghold"
-version = "0.5.1"
+version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "273197e986052cac7fed586142e40497ffec2e3536a7416d23bf694f90068b96"
+checksum = "3d6920eac403068618dfc07f4281d4e2cb432daa1b67f3d9091d6eae340a92db"
 dependencies = [
  "bincode",
  "hkdf",
- "iota-crypto 0.8.0",
+ "iota-crypto 0.12.1",
  "serde 1.0.137",
  "stronghold-derive 0.3.1",
  "stronghold-rlu",
