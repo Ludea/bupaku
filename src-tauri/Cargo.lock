@@ -532,7 +532,7 @@ dependencies = [
  "fs2",
  "git2",
  "iota-crypto 0.12.1",
- "iota_stronghold 0.6.0",
+ "iota_stronghold 0.6.4",
  "octocrab",
  "semver 1.0.10",
  "serde 1.0.137",
@@ -2343,9 +2343,9 @@ dependencies = [
 
 [[package]]
 name = "iota_stronghold"
-version = "0.6.0"
+version = "0.6.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3d6920eac403068618dfc07f4281d4e2cb432daa1b67f3d9091d6eae340a92db"
+checksum = "89ebdd443fde5c02437469c1a318aa4d56cba83db3913743862a0e3b54ab5736"
 dependencies = [
  "bincode",
  "hkdf",
@@ -2353,7 +2353,7 @@ dependencies = [
  "serde 1.0.137",
  "stronghold-derive 0.3.1",
  "stronghold-rlu",
- "stronghold-utils 0.4.0",
+ "stronghold-utils 0.4.1",
  "stronghold_engine 0.5.2",
  "thiserror",
  "zeroize",
@@ -4923,9 +4923,9 @@ dependencies = [
 
 [[package]]
 name = "stronghold-utils"
-version = "0.4.0"
+version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "30d8493a083506300a7a112d927f48068e4c733f0b46c63569dea6ab6dfe175c"
+checksum = "be1ce0d6205e8ea89771f2b32d64aeaecbc930320919e95ec4efcc0aa96cd951"
 dependencies = [
  "rand 0.8.5",
  "stronghold-derive 0.3.1",
