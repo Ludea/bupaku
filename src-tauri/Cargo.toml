@@ -18,7 +18,7 @@ fs2 = "0.4.3"
 serde_json = "1.0"
 git2 = "0.14.4"
 semver = "1.0.12"
-iota-crypto = { version = "0.12.1", features = [ "pbkdf" ] }
+iota-crypto = { version = "0.13.0", features = [ "pbkdf" ] }
 iota_stronghold = "0.8.0"
 octocrab = "0.16.0"
 serde = { version = "1.0", features = [ "derive" ] }

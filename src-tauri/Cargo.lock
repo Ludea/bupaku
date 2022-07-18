@@ -531,7 +531,7 @@ version = "0.1.0"
 dependencies = [
  "fs2",
  "git2",
- "iota-crypto 0.12.1",
+ "iota-crypto 0.13.0",
  "iota_stronghold 0.8.0",
  "octocrab",
  "semver 1.0.12",
@@ -2319,6 +2319,15 @@ dependencies = [
  "unicode-normalization",
  "x25519-dalek",
  "zeroize",
+]
+
+[[package]]
+name = "iota-crypto"
+version = "0.13.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "538b238fbd6fa732f526f6401656fa6a366598b9fe1ca35185e47f3978369707"
+dependencies = [
+ "pbkdf2 0.11.0",
 ]
 
 [[package]]
