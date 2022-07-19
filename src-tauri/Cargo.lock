@@ -425,6 +425,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "blake2"
+version = "0.10.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b9cf849ee05b2ee5fba5e36f97ff8ec2533916700fc0758d40d92136a42f3388"
+dependencies = [
+ "digest 0.10.3",
+]
+
+[[package]]
 name = "block"
 version = "0.1.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -532,7 +541,7 @@ dependencies = [
  "fs2",
  "git2",
  "iota-crypto 0.13.0",
- "iota_stronghold 0.8.0",
+ "iota_stronghold 0.8.1",
  "octocrab",
  "semver 1.0.12",
  "serde 1.0.139",
@@ -2265,7 +2274,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cccb8160eb8a88434fb3a0a3fc852e625aceab6c0272f0f03cc3f47c125bceab"
 dependencies = [
  "aead",
- "blake2",
+ "blake2 0.9.2",
  "chacha20poly1305",
  "digest 0.9.0",
  "ed25519-zebra 2.2.0",
@@ -2285,16 +2294,8 @@ version = "0.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ee273ae67ff1bc7c59317c0ab280e0e76259e6bd83e140ac4c2ecebec994f740"
 dependencies = [
- "aead",
- "blake2",
- "chacha20poly1305",
- "curve25519-dalek",
+ "blake2 0.9.2",
  "digest 0.9.0",
- "generic-array 0.14.5",
- "getrandom 0.2.7",
- "hmac 0.11.0",
- "sha2 0.9.9",
- "x25519-dalek",
 ]
 
 [[package]]
@@ -2306,6 +2307,7 @@ dependencies = [
  "aead",
  "aes",
  "aes-gcm",
+ "blake2 0.10.4",
  "chacha20poly1305",
  "curve25519-dalek",
  "digest 0.10.3",
@@ -2352,9 +2354,9 @@ dependencies = [
 
 [[package]]
 name = "iota_stronghold"
-version = "0.8.0"
+version = "0.8.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a54e18a028a97ed7b7521ec802cb6c37ac195cbb72ec5c409f38bf48d4a6c322"
+checksum = "241111d0e7fa6740c89e3355e0570f761445e561cb31a4d49ef784ee5ef99f0e"
 dependencies = [
  "bincode",
  "hkdf",
@@ -2363,7 +2365,7 @@ dependencies = [
  "stronghold-derive 0.3.1",
  "stronghold-rlu",
  "stronghold-utils 0.4.1",
- "stronghold_engine 0.5.2",
+ "stronghold_engine 0.5.3",
  "thiserror",
  "zeroize",
 ]
@@ -4739,7 +4741,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6142f7c25e94f6fd25a32c3348ec230df9109b463f59c8c7acc4bd34936babb7"
 dependencies = [
  "aes-gcm",
- "blake2",
+ "blake2 0.9.2",
  "chacha20poly1305",
  "rand 0.8.5",
  "rand_core 0.6.3",
@@ -4988,14 +4990,14 @@ dependencies = [
 
 [[package]]
 name = "stronghold_engine"
-version = "0.5.2"
+version = "0.5.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dd4131515d37c48994295d0dd7f99bb178332fe8c4cf0ab361a7ee7d4d62c2da"
+checksum = "1aab9d53f21c2293ba7e8fc3b6e7a5365ce12caf55f5c4b2a7d26e9e84d14071"
 dependencies = [
  "anyhow",
  "dirs-next",
  "hex",
- "iota-crypto 0.8.0",
+ "iota-crypto 0.12.1",
  "once_cell",
  "paste",
  "serde 1.0.139",
