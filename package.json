@@ -6,7 +6,7 @@
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
     "@mui/icons-material": "^5.10.3",
-    "@mui/lab": "^5.0.0-alpha.97",
+    "@mui/lab": "^5.0.0-alpha.98",
     "@mui/material": "^5.10.3",
     "@tauri-apps/api": "^1.0.2",
     "@tauri-apps/cli": "^1.0.5",
