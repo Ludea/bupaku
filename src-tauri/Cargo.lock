@@ -104,6 +104,18 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c5d78ce20460b82d3fa150275ed9d55e21064fc7951177baacf86a145c4a4b1f"
 
 [[package]]
+name = "arrayref"
+version = "0.3.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a4c527152e37cf757a3f78aae5a06fbeefdb07ccc535c980a3208ee3060dd544"
+
+[[package]]
+name = "arrayvec"
+version = "0.7.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8da52d66c7071e2e3fa2a1e5c6d088fec47b593032b254f5e980de8ea54454d6"
+
+[[package]]
 name = "async-trait"
 version = "0.1.56"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -223,6 +235,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "blake2b_simd"
+version = "1.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "72936ee4afc7f8f736d1c38383b56480b5497b4617b4a77bdbf1d2ababc76127"
+dependencies = [
+ "arrayref",
+ "arrayvec",
+ "constant_time_eq",
+]
+
+[[package]]
 name = "block"
 version = "0.1.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -289,7 +312,7 @@ dependencies = [
  "fs2",
  "git2",
  "iota-crypto 0.15.2",
- "iota_stronghold",
+ "iota_stronghold 1.0.4",
  "octocrab",
  "semver 1.0.14",
  "serde",
@@ -414,13 +437,38 @@ dependencies = [
 ]
 
 [[package]]
+name = "chacha20"
+version = "0.8.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5c80e5460aa66fe3b91d40bcbdab953a597b60053e34d684ac6903f863b680a6"
+dependencies = [
+ "cfg-if",
+ "cipher",
+ "cpufeatures 0.2.2",
+ "zeroize",
+]
+
+[[package]]
 name = "chacha20poly1305"
 version = "0.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1580317203210c517b6d44794abfbe600698276db18127e37ad3e69bf5e848e5"
 dependencies = [
  "aead",
- "chacha20",
+ "chacha20 0.7.1",
+ "cipher",
+ "poly1305",
+ "zeroize",
+]
+
+[[package]]
+name = "chacha20poly1305"
+version = "0.9.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a18446b09be63d457bbec447509e85f662f32952b035ce892290396bc0b0cff5"
+dependencies = [
+ "aead",
+ "chacha20 0.8.2",
  "cipher",
  "poly1305",
  "zeroize",
@@ -495,6 +543,12 @@ dependencies = [
  "bytes",
  "memchr",
 ]
+
+[[package]]
+name = "constant_time_eq"
+version = "0.1.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "245097e9a4535ee1e3e3931fcfcd55a796a44c643e8596ff6566d68f09b87bbc"
 
 [[package]]
 name = "convert_case"
@@ -1635,7 +1689,7 @@ dependencies = [
  "aes",
  "aes-gcm",
  "blake2 0.10.4",
- "chacha20poly1305",
+ "chacha20poly1305 0.8.0",
  "curve25519-dalek",
  "digest 0.10.3",
  "ed25519-zebra",
@@ -1662,8 +1716,24 @@ version = "0.15.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4006145223dce11aed9f71c714a6008bd79ba4173e83c81553707332f372ca48"
 dependencies = [
+ "aead",
+ "aes",
+ "aes-gcm",
  "autocfg",
+ "blake2 0.10.4",
+ "chacha20poly1305 0.9.1",
+ "curve25519-dalek",
+ "digest 0.10.3",
+ "ed25519-zebra",
+ "generic-array",
+ "getrandom 0.2.7",
+ "hmac",
  "pbkdf2",
+ "serde",
+ "sha2 0.10.2",
+ "unicode-normalization",
+ "x25519-dalek",
+ "zeroize",
 ]
 
 [[package]]
@@ -1676,10 +1746,28 @@ dependencies = [
  "hkdf",
  "iota-crypto 0.12.1",
  "serde",
- "stronghold-derive",
+ "stronghold-derive 0.3.1",
  "stronghold-rlu",
- "stronghold-utils",
- "stronghold_engine",
+ "stronghold-utils 0.4.1",
+ "stronghold_engine 0.5.3",
+ "thiserror",
+ "zeroize",
+]
+
+[[package]]
+name = "iota_stronghold"
+version = "1.0.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "aff08ce171ead0843be707f267893c0d8f1d76996e809772f4fcb6c19cc2e5f4"
+dependencies = [
+ "bincode",
+ "hkdf",
+ "iota-crypto 0.15.2",
+ "rust-argon2",
+ "serde",
+ "stronghold-derive 1.0.0",
+ "stronghold-utils 1.0.0",
+ "stronghold_engine 1.0.1",
  "thiserror",
  "zeroize",
 ]
@@ -2056,6 +2144,18 @@ name = "new_debug_unreachable"
 version = "1.0.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e4a24736216ec316047a1fc4252e27dabb04218aa4a3f37c6e7ddbf1f9782b54"
+
+[[package]]
+name = "nix"
+version = "0.24.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "195cdbc1741b8134346d515b3a56a1c94b0912758009cfd53f99ea0f57b065fc"
+dependencies = [
+ "bitflags",
+ "cfg-if",
+ "libc",
+ "memoffset",
+]
 
 [[package]]
 name = "nodrop"
@@ -2840,6 +2940,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "rust-argon2"
+version = "1.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b50162d19404029c1ceca6f6980fe40d45c8b369f6f44446fa14bb39573b5bb9"
+dependencies = [
+ "base64",
+ "blake2b_simd",
+ "constant_time_eq",
+ "crossbeam-utils",
+]
+
+[[package]]
 name = "rustc-demangle"
 version = "0.1.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3291,6 +3403,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "stronghold-derive"
+version = "1.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2835db23c4724c05a2f85b81c4681f4aa8ea158edc8a7f4ad791c916fb766c2e"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
 name = "stronghold-rlu"
 version = "0.4.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3319,13 +3442,42 @@ dependencies = [
 ]
 
 [[package]]
+name = "stronghold-runtime"
+version = "1.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3e06ea68f4f9de9e74e8ab2263d751bd1162f6b863f2b00b35ea9e382db317bb"
+dependencies = [
+ "dirs",
+ "iota-crypto 0.15.2",
+ "libc",
+ "libsodium-sys",
+ "log",
+ "nix",
+ "rand 0.8.5",
+ "serde",
+ "thiserror",
+ "windows 0.36.1",
+ "zeroize",
+]
+
+[[package]]
 name = "stronghold-utils"
 version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "be1ce0d6205e8ea89771f2b32d64aeaecbc930320919e95ec4efcc0aa96cd951"
 dependencies = [
  "rand 0.8.5",
- "stronghold-derive",
+ "stronghold-derive 0.3.1",
+]
+
+[[package]]
+name = "stronghold-utils"
+version = "1.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8300214898af5e153e7f66e49dbd1c6a21585f2d592d9f24f58b969792475ed6"
+dependencies = [
+ "rand 0.8.5",
+ "stronghold-derive 1.0.0",
 ]
 
 [[package]]
@@ -3341,7 +3493,25 @@ dependencies = [
  "once_cell",
  "paste",
  "serde",
- "stronghold-runtime",
+ "stronghold-runtime 0.5.2",
+ "thiserror",
+ "zeroize",
+]
+
+[[package]]
+name = "stronghold_engine"
+version = "1.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "dffc6200aa9f9f4a942843e1c15922957bfd9e818b8726b28b23071bccb39401"
+dependencies = [
+ "anyhow",
+ "dirs-next",
+ "hex",
+ "iota-crypto 0.15.2",
+ "once_cell",
+ "paste",
+ "serde",
+ "stronghold-runtime 1.0.1",
  "thiserror",
  "zeroize",
 ]
@@ -3577,7 +3747,7 @@ source = "git+https://github.com/tauri-apps/tauri-plugin-stronghold?branch=main#
 dependencies = [
  "hex",
  "iota-crypto 0.14.3",
- "iota_stronghold",
+ "iota_stronghold 0.8.1",
  "serde",
  "serde_json",
  "tauri",
@@ -4256,6 +4426,19 @@ checksum = "712e227841d057c1ee1cd2fb22fa7e5a5461ae8e48fa2ca79ec42cfc1931183f"
 
 [[package]]
 name = "windows"
+version = "0.36.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e53b97a83176b369b0eb2fd8158d4ae215357d02df9d40c1e1bf1879c5482c80"
+dependencies = [
+ "windows_aarch64_msvc 0.36.1",
+ "windows_i686_gnu 0.36.1",
+ "windows_i686_msvc 0.36.1",
+ "windows_x86_64_gnu 0.36.1",
+ "windows_x86_64_msvc 0.36.1",
+]
+
+[[package]]
+name = "windows"
 version = "0.37.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "57b543186b344cc61c85b5aab0d2e3adf4e0f99bc076eff9aa5927bcc0b8a647"
@@ -4519,9 +4702,9 @@ checksum = "d2d7d3948613f75c98fd9328cfdcc45acc4d360655289d0a7d4ec931392200a3"
 
 [[package]]
 name = "zeroize"
-version = "1.5.5"
+version = "1.5.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "94693807d016b2f2d2e14420eb3bfcca689311ff775dcf113d74ea624b7cdf07"
+checksum = "c394b5bd0c6f669e7275d9c20aa90ae064cb22e75a1cad54e1b34088034b149f"
 dependencies = [
  "zeroize_derive",
 ]
