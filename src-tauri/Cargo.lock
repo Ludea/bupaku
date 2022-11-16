@@ -227,9 +227,9 @@ dependencies = [
 
 [[package]]
 name = "blake2"
-version = "0.10.4"
+version = "0.10.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b9cf849ee05b2ee5fba5e36f97ff8ec2533916700fc0758d40d92136a42f3388"
+checksum = "b12e5fd123190ce1c2e559308a94c9bacad77907d4c6005d9e58fe1a0689e55e"
 dependencies = [
  "digest 0.10.3",
 ]
@@ -311,7 +311,7 @@ version = "0.1.0"
 dependencies = [
  "fs2",
  "git2",
- "iota-crypto 0.15.2",
+ "iota-crypto 0.15.3",
  "iota_stronghold 1.0.4",
  "octocrab",
  "semver 1.0.14",
@@ -1687,7 +1687,7 @@ dependencies = [
  "aead",
  "aes",
  "aes-gcm",
- "blake2 0.10.4",
+ "blake2 0.10.5",
  "chacha20poly1305 0.8.0",
  "curve25519-dalek",
  "digest 0.10.3",
@@ -1711,15 +1711,15 @@ checksum = "d53239ace29cccec48af2f3b509090d546bcc52648c6147866d88bc70f4352b3"
 
 [[package]]
 name = "iota-crypto"
-version = "0.15.2"
+version = "0.15.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4006145223dce11aed9f71c714a6008bd79ba4173e83c81553707332f372ca48"
+checksum = "4e04d492224bff6e97142f033d0a4383bcbc05918be1ff7b3abd2c1cc85205a2"
 dependencies = [
  "aead",
  "aes",
  "aes-gcm",
  "autocfg",
- "blake2 0.10.4",
+ "blake2 0.10.5",
  "chacha20poly1305 0.9.1",
  "curve25519-dalek",
  "digest 0.10.3",
@@ -1761,7 +1761,7 @@ checksum = "aff08ce171ead0843be707f267893c0d8f1d76996e809772f4fcb6c19cc2e5f4"
 dependencies = [
  "bincode",
  "hkdf",
- "iota-crypto 0.15.2",
+ "iota-crypto 0.15.3",
  "rust-argon2",
  "serde",
  "stronghold-derive 1.0.0",
@@ -3447,7 +3447,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3e06ea68f4f9de9e74e8ab2263d751bd1162f6b863f2b00b35ea9e382db317bb"
 dependencies = [
  "dirs",
- "iota-crypto 0.15.2",
+ "iota-crypto 0.15.3",
  "libc",
  "libsodium-sys",
  "log",
@@ -3506,7 +3506,7 @@ dependencies = [
  "anyhow",
  "dirs-next",
  "hex",
- "iota-crypto 0.15.2",
+ "iota-crypto 0.15.3",
  "once_cell",
  "paste",
  "serde",
