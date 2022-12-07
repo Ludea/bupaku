@@ -7,7 +7,7 @@
     "@emotion/styled": "^11.10.5",
     "@mui/icons-material": "^5.10.16",
     "@mui/lab": "^5.0.0-alpha.110",
-    "@mui/material": "^5.10.16",
+    "@mui/material": "^5.10.17",
     "@tauri-apps/api": "^1.2.0",
     "@tauri-apps/cli": "^1.2.1",
     "@tauri-apps/tauri-forage": "^1.0.0-beta.2",
