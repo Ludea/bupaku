@@ -22,7 +22,9 @@ iota-crypto = { version = "0.15.3", features = [ "pbkdf" ] }
 iota_stronghold = "1.0.5"
 octocrab = "0.18.1"
 serde = { version = "1.0", features = [ "derive" ] }
-tauri = { version = "1.2.4", features = ["dialog-open", "fs-read-dir", "updater"] }
+rand = "0.8.5"
+rust-argon2 = { version = "1.0.0" }
+tauri = { version = "1.1.3", features = ["dialog-open", "fs-read-dir", "updater"] }
 tauri-plugin-stronghold = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "dev" }
 
 [features]
