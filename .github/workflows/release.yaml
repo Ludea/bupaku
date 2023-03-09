@@ -18,10 +18,8 @@ jobs:
       uses: actions/setup-node@v3.6.0
       with:
         node-version: 16
-    - name: install Rust stable
-      uses: actions-rs/toolchain@v1.0.7
-      with:
-        toolchain: stable
+    - name: Setup Rust
+      uses: dtolnay/rust-toolchain@stable
     - name: install webkit2gtk (ubuntu only)
       if: matrix.platform == 'ubuntu-latest'
       run: |
