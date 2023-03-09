@@ -32,7 +32,7 @@ jobs:
         token: ${{ secrets.CODECOV_TOKEN }}
     - name: install app dependencies and build it
       run: yarn && yarn build
-    - uses: tauri-apps/tauri-action@v0.3
+    - uses: tauri-apps/tauri-action@dev
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
